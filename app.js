@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js?v=5';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=6';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -9,7 +9,6 @@ const PARAMS = [
   { key: 'cupH', group: 'cupboard', label: 'Internal height (floor to shelf)', min: 150, max: 1200, step: 5, def: 605 },
   { key: 'gapH', group: 'cupboard', label: 'Gap under door', min: 40, max: 200, step: 1, def: 108 },
   { key: 'openW', group: 'cupboard', label: 'Opening width', min: 250, max: 1200, step: 5, def: 470 },
-  { key: 'floorOut', group: 'cupboard', label: 'Clear floor in front of door (to opposite wall)', min: 0, max: 4000, step: 10, def: 1100 },
   { key: 'robotDia', group: 'robot', label: 'Diameter', min: 250, max: 400, step: 1, def: 353 },
   { key: 'robotH', group: 'robot', label: 'Height (tallest point)', min: 50, max: 130, step: 0.5, def: 80 },
   { key: 'dockW', group: 'dock', label: 'Width', min: 50, max: 700, step: 1, def: 340 },
@@ -18,12 +17,10 @@ const PARAMS = [
   { key: 'dockTowerD', group: 'dock', label: 'Tower depth (without ramp) – optional', min: 30, max: 700, step: 1, def: null, show: 300, optional: true },
   { key: 'heightMargin', group: 'clearance', label: 'Safety margin under door', min: 0, max: 20, step: 1, def: 5 },
   { key: 'sideClear', group: 'clearance', label: 'Side clearance each side of dock', min: 0, max: 500, step: 5, def: 0 },
-  { key: 'frontClear', group: 'clearance', label: 'Clear floor in front of dock', min: 0, max: 1500, step: 10, def: 500 },
 ];
 const BYKEY = Object.fromEntries(PARAMS.map((p) => [p.key, p]));
 const DEFAULTS = { ...Object.fromEntries(PARAMS.map((p) => [p.key, p.def])), robotOnDock: true, modelId: 'custom' };
 const MODEL_KEYS = ['robotDia', 'robotH', 'dockW', 'dockD', 'dockH', 'dockTowerD'];
-const MODEL_SET_KEYS = [...MODEL_KEYS, 'frontClear', 'sideClear']; // set by a model, but editing them doesn't make it 'custom'
 
 const COLORS = { ok: '#2e8b57', warn: '#d08a12', fail: '#c8372d', info: '#2f6fb0', unknown: '#8a8f96' };
 const VERDICT = { ok: 'Fits', info: 'Fits', warn: 'Fits – with caveats', fail: "Won't fit", unknown: 'Missing data' };
@@ -69,7 +66,6 @@ function buildControls() {
     catch { flash($('copyLink'), 'Copy failed'); }
   });
   $('showDoor').addEventListener('change', update);
-  $('showClear').addEventListener('change', update);
   $('resetCam').addEventListener('click', resetCamera);
 }
 
@@ -85,9 +81,9 @@ function setParam(key, v) {
   update();
 }
 
-// Cupboard settings with clearances reset, so one model's recommended clearance doesn't carry over to another
+// Cupboard settings with side clearance reset, so one model's recommendation doesn't carry over to another
 function modelBase() {
-  return { ...state, frontClear: DEFAULTS.frontClear, sideClear: DEFAULTS.sideClear };
+  return { ...state, sideClear: DEFAULTS.sideClear };
 }
 
 function loadModel(id) {
@@ -243,8 +239,6 @@ function render3D(result) {
   gapLine.computeLineDistances();
   world.add(gapLine);
 
-  if (isNum(s.floorOut)) addBox(Math.max(W * 2.5, 1200), Math.min(H + t, 900), t, 0, Math.min(H + t, 900) / 2, -DOOR_T - s.floorOut - t / 2, wallColor, 0.25);
-
   // Dock
   const dockKnown = isNum(s.dockH);
   const dW = s.dockW || 0, dD = s.dockD || 0, dH = dockKnown ? s.dockH : Math.min(500, H);
@@ -252,18 +246,6 @@ function render3D(result) {
   if (dW && dD) {
     addBox(dW, dH, tD, 0, dH / 2, D - tD / 2, dockKnown ? 0x3a4048 : 0x9a9ea4, dockKnown ? 0.6 : 0.3);
     if (dD > tD) addBox(dW, 12, dD - tD, 0, 6, D - tD - (dD - tD) / 2, 0x5a6068, 0.7);
-  }
-
-  // Approach zone
-  if ($('showClear').checked && s.frontClear > 0 && dD) {
-    const zw = Math.max(dW, s.robotDia || 0);
-    const plane = new THREE.Mesh(
-      new THREE.PlaneGeometry(zw, s.frontClear),
-      new THREE.MeshBasicMaterial({ color: 0x2f6fb0, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide })
-    );
-    plane.rotation.x = -Math.PI / 2;
-    plane.position.set(0, 1, D - dD - s.frontClear / 2);
-    world.add(plane);
   }
 
   // Robot (parked)
@@ -305,10 +287,8 @@ const stroke = (c, w = 1.5, extra = {}) => ({ stroke: c, 'stroke-width': w, 'vec
 
 function outsideExtent(s) {
   const dD = s.dockD || 0;
-  const front = Math.max(0, (s.frontClear || 0) - (s.cupD - dD));
   const parked = dD + (s.robotOnDock ? 0 : s.robotDia || 0);
-  const wall = isNum(s.floorOut) ? s.floorOut + DOOR_T + 30 : 0;
-  return Math.max(front, parked - s.cupD, wall, 120);
+  return Math.max(parked - s.cupD, 120);
 }
 
 function renderTop(svg, result) {
@@ -333,17 +313,7 @@ function renderTop(svg, result) {
   }
   el('line', { x1: -W / 2 - t, y1: D + DOOR_T / 2, x2: W / 2 + t, y2: D + DOOR_T / 2, ...stroke('#b08a4e', 3, { 'stroke-dasharray': '10 6' }) }, svg);
   text(svg, W / 2 + t + 8, D + DOOR_T / 2, 'door', fs * 0.75, { anchor: 'start', fill: '#b08a4e' });
-  if (isNum(s.floorOut)) {
-    const wy = D + DOOR_T + s.floorOut;
-    el('rect', { x: -half - 40, y: wy, width: 2 * half + 80, height: t, fill: '#e6dfcd', ...stroke('#8d8676') }, svg);
-    text(svg, half + 30, wy - fs * 0.6, `wall ${s.floorOut}`, fs * 0.7, { anchor: 'end' });
-  }
-  // approach zone
   const dD = s.dockD || 0, dW = s.dockW || 0;
-  if ($('showClear').checked && s.frontClear > 0 && dD) {
-    const zw = Math.max(dW, s.robotDia || 0);
-    el('rect', { x: -zw / 2, y: dD, width: zw, height: s.frontClear, fill: COLORS.info, 'fill-opacity': 0.1, ...stroke(COLORS.info, 1, { 'stroke-dasharray': '6 5' }) }, svg);
-  }
   // dock
   if (dD && dW) {
     const known = isNum(s.dockH);
@@ -386,15 +356,7 @@ function renderSide(svg, result) {
   const gx = D + DOOR_T + 30;
   el('line', { x1: gx, y1: H - s.gapH, x2: gx, y2: H, ...stroke('#4a4f55', 1) }, svg);
   text(svg, gx + 10, H - s.gapH / 2, `gap ${s.gapH}`, fs * 0.8, { anchor: 'start' });
-  if (isNum(s.floorOut)) {
-    const wx = D + DOOR_T + s.floorOut;
-    el('rect', { x: wx, y: -t, width: t, height: H + t, fill: '#e6dfcd', ...stroke('#8d8676') }, svg);
-  }
-  // approach zone
   const dD = s.dockD || 0;
-  if ($('showClear').checked && s.frontClear > 0 && dD) {
-    el('rect', { x: dD, y: H - 6, width: s.frontClear, height: 6, fill: COLORS.info, 'fill-opacity': 0.35 }, svg);
-  }
   // dock
   if (dD) {
     const known = isNum(s.dockH);

@@ -1,5 +1,5 @@
 {
-  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. clearance (optional): recommended clear floor in front of the dock and on each side, from the manual.",
+  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. clearance.sides (optional): recommended clear space on each side of the dock, from the manual.",
   "models": [
     {
       "id": "roborock-saros-10",
@@ -16,13 +16,12 @@
         "type": "Self-empty + mop wash"
       },
       "robotOnDock": true,
-      "notes": "Retractable LiDAR turret; 79.8 mm is the robot's quoted height. Reviewer notes the dock wants ~1 m front and 0.5 m side clearance.",
+      "notes": "Retractable LiDAR turret; 79.8 mm is the robot's quoted height. Reviewer notes the dock wants 0.5 m side clearance.",
       "sources": [
         "https://cybershack.com.au/reviews/roborock-saros-10-the-thinnest-smartest-robot-vacuum-mop-cleaning-review",
         "https://www.techradar.com/home/robot-vacuums/roborock-saros-10r-vs-saros-10-robot-vacuum"
       ],
       "clearance": {
-        "front": 1000,
         "sides": 500
       }
     },
@@ -212,7 +211,6 @@
         "https://manuals.plus/asin/B0DRVB4DVC.pdf"
       ],
       "clearance": {
-        "front": 1500,
         "sides": 500
       }
     }

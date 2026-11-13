@@ -10,7 +10,7 @@ Live: https://malcmcmreal.github.io/vacuum-garage/
 
 - Sliders for the cupboard (internal width, depth, height, gap under the door, opening width), the robot (diameter, height) and the dock (width, depth, height).
 - A live 3D view (Three.js) plus top and side outlines, all redrawn as you move a slider.
-- Checks: robot height against the door gap (with a safety margin), robot diameter against the opening, dock width and height, depth when the robot is parked, and how much approach space reaches outside the cupboard.
+- Checks: robot height against the door gap (with a safety margin), robot diameter against the opening, dock width and height, and depth when the robot is parked.
 - A table that tests every model in `vacuums.json` against your cupboard.
 - The URL saves the current setup, so you can bookmark or share it.
 
