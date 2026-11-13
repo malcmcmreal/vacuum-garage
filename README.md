@@ -52,3 +52,7 @@ The fit logic lives in [`fit.js`](fit.js), which is DOM-free so you can test it 
 ## Licence
 
 MIT
+
+## Deploying changes
+
+GitHub Pages serves files with a short browser cache. After changing `app.js`, `fit.js` or `style.css`, bump the `?v=` number in `index.html` (and on the `fit.js` import in `app.js`) so visitors get the new version immediately. `vacuums.json` is always re-checked.

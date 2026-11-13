@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=3';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -458,7 +458,7 @@ function update() {
 async function init() {
   buildControls();
   try {
-    const res = await fetch('vacuums.json');
+    const res = await fetch('vacuums.json', { cache: 'no-cache' });
     models = (await res.json()).models;
   } catch (e) {
     console.error('Could not load vacuums.json', e);
