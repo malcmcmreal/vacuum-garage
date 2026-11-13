@@ -4,23 +4,24 @@ import { evaluate, paramsForModel, RANK } from './fit.js';
 
 // ---------- Parameters ----------
 const PARAMS = [
-  { key: 'cupW', group: 'cupboard', label: 'Internal width', min: 250, max: 1200, step: 5, def: 600 },
-  { key: 'cupD', group: 'cupboard', label: 'Internal depth (to back of door)', min: 250, max: 900, step: 5, def: 560 },
-  { key: 'cupH', group: 'cupboard', label: 'Internal height (floor to shelf)', min: 150, max: 1200, step: 5, def: 700 },
-  { key: 'gapH', group: 'cupboard', label: 'Gap under door', min: 40, max: 200, step: 1, def: 100 },
-  { key: 'openW', group: 'cupboard', label: 'Opening width', min: 250, max: 1200, step: 5, def: 560 },
+  { key: 'cupW', group: 'cupboard', label: 'Internal width', min: 250, max: 1200, step: 5, def: 470 },
+  { key: 'cupD', group: 'cupboard', label: 'Internal depth (to back of door)', min: 250, max: 900, step: 5, def: 415 },
+  { key: 'cupH', group: 'cupboard', label: 'Internal height (floor to shelf)', min: 150, max: 1200, step: 5, def: 605 },
+  { key: 'gapH', group: 'cupboard', label: 'Gap under door', min: 40, max: 200, step: 1, def: 108 },
+  { key: 'openW', group: 'cupboard', label: 'Opening width', min: 250, max: 1200, step: 5, def: 470 },
   { key: 'robotDia', group: 'robot', label: 'Diameter', min: 250, max: 400, step: 1, def: 353 },
   { key: 'robotH', group: 'robot', label: 'Height (tallest point)', min: 50, max: 130, step: 0.5, def: 80 },
   { key: 'dockW', group: 'dock', label: 'Width', min: 50, max: 700, step: 1, def: 340 },
   { key: 'dockD', group: 'dock', label: 'Depth (incl. ramp)', min: 30, max: 700, step: 1, def: 487 },
   { key: 'dockH', group: 'dock', label: 'Height', min: 50, max: 800, step: 1, def: 521 },
+  { key: 'dockTowerD', group: 'dock', label: 'Tower depth (without ramp) – optional', min: 30, max: 700, step: 1, def: null, show: 300, optional: true },
   { key: 'heightMargin', group: 'clearance', label: 'Safety margin under door', min: 0, max: 20, step: 1, def: 5 },
   { key: 'sideClear', group: 'clearance', label: 'Side clearance each side of dock', min: 0, max: 500, step: 5, def: 0 },
   { key: 'frontClear', group: 'clearance', label: 'Clear floor in front of dock', min: 0, max: 1500, step: 10, def: 500 },
 ];
 const BYKEY = Object.fromEntries(PARAMS.map((p) => [p.key, p]));
 const DEFAULTS = { ...Object.fromEntries(PARAMS.map((p) => [p.key, p.def])), robotOnDock: true, modelId: 'custom' };
-const MODEL_KEYS = ['robotDia', 'robotH', 'dockW', 'dockD', 'dockH'];
+const MODEL_KEYS = ['robotDia', 'robotH', 'dockW', 'dockD', 'dockH', 'dockTowerD'];
 
 const COLORS = { ok: '#2e8b57', warn: '#d08a12', fail: '#c8372d', info: '#2f6fb0', unknown: '#8a8f96' };
 const VERDICT = { ok: 'Fits', info: 'Fits', warn: 'Fits – with caveats', fail: "Won't fit", unknown: 'Missing data' };
@@ -94,10 +95,10 @@ function syncInputs() {
     const { range, num, wrap } = inputs[p.key];
     const v = state[p.key];
     const known = isNum(v);
-    wrap.classList.toggle('unknown', !known);
-    range.value = known ? v : p.def;
+    wrap.classList.toggle('unknown', !known && !p.optional);
+    range.value = known ? v : (p.show ?? p.def);
     if (document.activeElement !== num) num.value = known ? v : '';
-    num.placeholder = known ? '' : '?';
+    num.placeholder = known ? '' : (p.optional ? '–' : '?');
   }
   $('robotOnDock').checked = !!state.robotOnDock;
   $('modelSelect').value = state.modelId;
@@ -238,7 +239,11 @@ function render3D(result) {
   // Dock
   const dockKnown = isNum(s.dockH);
   const dW = s.dockW || 0, dD = s.dockD || 0, dH = dockKnown ? s.dockH : Math.min(500, H);
-  if (dW && dD) addBox(dW, dH, dD, 0, dH / 2, D - dD / 2, dockKnown ? 0x3a4048 : 0x9a9ea4, dockKnown ? 0.6 : 0.3);
+  const tD = isNum(s.dockTowerD) ? Math.min(s.dockTowerD, dD) : dD;
+  if (dW && dD) {
+    addBox(dW, dH, tD, 0, dH / 2, D - tD / 2, dockKnown ? 0x3a4048 : 0x9a9ea4, dockKnown ? 0.6 : 0.3);
+    if (dD > tD) addBox(dW, 12, dD - tD, 0, 6, D - tD - (dD - tD) / 2, 0x5a6068, 0.7);
+  }
 
   // Approach zone
   if ($('showClear').checked && s.frontClear > 0 && dD) {
@@ -327,8 +332,10 @@ function renderTop(svg, result) {
   // dock
   if (dD && dW) {
     const known = isNum(s.dockH);
-    el('rect', { x: -dW / 2, y: 0, width: dW, height: dD, fill: known ? '#3a4048' : '#9a9ea4', 'fill-opacity': known ? 0.75 : 0.4, rx: 6, ...stroke('#22262a') }, svg);
-    text(svg, 0, Math.min(dD / 2, 60), 'dock', fs * 0.8, { fill: '#fff' });
+    const tD = isNum(s.dockTowerD) ? Math.min(s.dockTowerD, dD) : dD;
+    if (dD > tD) el('rect', { x: -dW / 2, y: tD, width: dW, height: dD - tD, fill: '#5a6068', 'fill-opacity': 0.35, ...stroke('#22262a', 1, { 'stroke-dasharray': '5 4' }) }, svg);
+    el('rect', { x: -dW / 2, y: 0, width: dW, height: tD, fill: known ? '#3a4048' : '#9a9ea4', 'fill-opacity': known ? 0.75 : 0.4, rx: 6, ...stroke('#22262a') }, svg);
+    text(svg, 0, Math.min(tD / 2, 60), 'dock', fs * 0.8, { fill: '#fff' });
   }
   // robot
   if (isNum(s.robotDia)) {
@@ -373,8 +380,10 @@ function renderSide(svg, result) {
   if (dD) {
     const known = isNum(s.dockH);
     const dH = known ? s.dockH : Math.min(500, H);
-    el('rect', { x: 0, y: H - dH, width: dD, height: dH, fill: known ? '#3a4048' : '#9a9ea4', 'fill-opacity': known ? 0.75 : 0.35, rx: 6, ...stroke('#22262a', 1.5, known ? {} : { 'stroke-dasharray': '6 5' }) }, svg);
-    text(svg, dD / 2, H - dH - fs * 0.8, known ? `dock ${s.dockH}` : 'dock height ?', fs * 0.8);
+    const tD = isNum(s.dockTowerD) ? Math.min(s.dockTowerD, dD) : dD;
+    if (dD > tD) el('rect', { x: tD, y: H - 12, width: dD - tD, height: 12, fill: '#5a6068', 'fill-opacity': 0.6, ...stroke('#22262a', 1) }, svg);
+    el('rect', { x: 0, y: H - dH, width: tD, height: dH, fill: known ? '#3a4048' : '#9a9ea4', 'fill-opacity': known ? 0.75 : 0.35, rx: 6, ...stroke('#22262a', 1.5, known ? {} : { 'stroke-dasharray': '6 5' }) }, svg);
+    text(svg, tD / 2, H - dH - fs * 0.8, known ? `dock ${s.dockH}` : 'dock height ?', fs * 0.8);
   }
   // robot
   if (isNum(s.robotDia) && isNum(s.robotH)) {

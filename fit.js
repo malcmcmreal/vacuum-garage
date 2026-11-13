@@ -8,7 +8,7 @@ const mm = (v) => `${Math.round(v * 10) / 10} mm`;
 
 /**
  * @param {object} p  cupW, cupD, cupH, gapH, openW, robotDia, robotH,
- *                    dockW, dockD, dockH, heightMargin, sideClear, frontClear,
+ *                    dockW, dockD, dockH, dockTowerD (optional), heightMargin, sideClear, frontClear,
  *                    robotOnDock (bool)
  * @returns {{checks: Array<{id,label,status,detail}>, overall: string, geometry: object}}
  */
@@ -48,18 +48,23 @@ export function evaluate(p) {
     else add('dockH', 'Dock height', 'ok', `${mm(c)} above the dock.`);
   } else add('dockH', 'Dock height', 'unknown', 'Dock height unknown – check the manual.');
 
-  // 5. Depth: dock + parked robot vs internal depth
+  // 5. Depth: dock tower must fit inside; a low ramp and the parked robot may poke out under the door
   let parkedDepth = null;
   if (isNum(p.dockD)) {
+    const towerKnown = isNum(p.dockTowerD);
+    const tower = towerKnown ? Math.min(p.dockTowerD, p.dockD) : p.dockD;
     parkedDepth = p.dockD + (p.robotOnDock ? 0 : (p.robotDia || 0));
     const over = parkedDepth - p.cupD;
-    if (p.dockD > p.cupD) add('depth', 'Depth when parked', 'fail', `Dock alone is ${mm(p.dockD - p.cupD)} deeper than the cupboard.`);
-    else if (over > 0) {
-      const robotFitsUnder = isNum(p.robotH) && p.robotH <= p.gapH;
-      add('depth', 'Depth when parked', robotFitsUnder ? 'warn' : 'fail',
-        robotFitsUnder
-          ? `Parked robot pokes out under the door by ${mm(over)}.`
-          : `Parked robot sticks out ${mm(over)} and is too tall to sit under the door.`);
+    const robotFitsUnder = isNum(p.robotH) && p.robotH <= p.gapH;
+    if (tower > p.cupD) {
+      add('depth', 'Depth when parked', 'fail', towerKnown
+        ? `Dock tower is ${mm(tower - p.cupD)} deeper than the cupboard.`
+        : `Dock is ${mm(p.dockD - p.cupD)} deeper than the cupboard. If part of that is a low ramp, enter the tower depth – the ramp can sit under the door.`);
+    } else if (over > 0) {
+      const what = p.dockD > p.cupD ? 'Ramp and parked robot poke' : 'Parked robot pokes';
+      add('depth', 'Depth when parked', robotFitsUnder ? 'warn' : 'fail', robotFitsUnder
+        ? `${what} out under the door by ${mm(over)}.`
+        : `Parked robot sticks out ${mm(over)} and is too tall to sit under the door.`);
     } else add('depth', 'Depth when parked', 'ok', `${mm(-over)} spare between the parked robot and the door.`);
   } else add('depth', 'Depth when parked', 'unknown', 'Dock depth unknown.');
 
@@ -90,6 +95,7 @@ export function paramsForModel(base, m) {
     dockW: m.dock.width,
     dockD: m.dock.depth,
     dockH: m.dock.height,
+    dockTowerD: m.dock.towerDepth ?? null,
     robotOnDock: m.robotOnDock,
   };
 }
