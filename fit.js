@@ -8,7 +8,7 @@ const mm = (v) => `${Math.round(v * 10) / 10} mm`;
 
 /**
  * @param {object} p  cupW, cupD, cupH, gapH, openW, robotDia, robotH,
- *                    dockW, dockD, dockH, dockTowerD (optional), heightMargin, sideClear, frontClear,
+ *                    dockW, dockD, dockH, dockTowerD (optional), heightMargin, sideClear, frontClear, floorOut,
  *                    robotOnDock (bool)
  * @returns {{checks: Array<{id,label,status,detail}>, overall: string, geometry: object}}
  */
@@ -68,14 +68,17 @@ export function evaluate(p) {
     } else add('depth', 'Depth when parked', 'ok', `${mm(-over)} spare between the parked robot and the door.`);
   } else add('depth', 'Depth when parked', 'unknown', 'Dock depth unknown.');
 
-  // 6. Front clearance (informational)
-  if (isNum(parkedDepth) && p.frontClear > 0) {
-    const insideRun = Math.max(0, p.cupD - (p.dockD ?? 0));
-    const outside = Math.max(0, p.frontClear - insideRun);
-    add('front', 'Front approach', 'info',
-      outside > 0
-        ? `Needs ${mm(p.frontClear)} clear floor in front of the dock – ${mm(outside)} of it outside the cupboard.`
-        : `The ${mm(p.frontClear)} approach fits inside the cupboard.`);
+  // 6. Front approach: clear floor in front of the dock vs recommended
+  if (isNum(p.dockD) && p.frontClear > 0) {
+    const insideRun = p.cupD - p.dockD; // negative if the ramp pokes out
+    if (isNum(p.floorOut)) {
+      const avail = p.floorOut + insideRun;
+      if (avail < p.frontClear) add('front', 'Front approach', 'warn', `${mm(avail)} clear in front of the dock; ${mm(p.frontClear)} recommended.`);
+      else add('front', 'Front approach', 'ok', `${mm(avail)} clear in front of the dock (${mm(p.frontClear)} recommended).`);
+    } else {
+      const outside = Math.max(0, p.frontClear - Math.max(0, insideRun));
+      add('front', 'Front approach', 'info', `Needs ${mm(p.frontClear)} clear floor in front of the dock – ${mm(outside)} of it outside the cupboard.`);
+    }
   }
 
   // 'info' checks never change the verdict
@@ -97,5 +100,7 @@ export function paramsForModel(base, m) {
     dockH: m.dock.height,
     dockTowerD: m.dock.towerDepth ?? null,
     robotOnDock: m.robotOnDock,
+    frontClear: m.clearance?.front ?? base.frontClear,
+    sideClear: m.clearance?.sides ?? base.sideClear,
   };
 }

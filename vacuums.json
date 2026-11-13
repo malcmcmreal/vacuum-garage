@@ -1,5 +1,5 @@
 {
-  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying.",
+  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. clearance (optional): recommended clear floor in front of the dock and on each side, from the manual.",
   "models": [
     {
       "id": "roborock-saros-10",
@@ -20,7 +20,11 @@
       "sources": [
         "https://cybershack.com.au/reviews/roborock-saros-10-the-thinnest-smartest-robot-vacuum-mop-cleaning-review",
         "https://www.techradar.com/home/robot-vacuums/roborock-saros-10r-vs-saros-10-robot-vacuum"
-      ]
+      ],
+      "clearance": {
+        "front": 1000,
+        "sides": 500
+      }
     },
     {
       "id": "roborock-saros-10r",
@@ -204,8 +208,13 @@
       "notes": "Embedded dToF LiDAR (no turret). Dock depth includes the base/ramp (294 mm without it).",
       "sources": [
         "https://www.ecovacs.com/uk/deebot-robotic-vacuum-cleaner/deebot-t50-pro-omni",
-        "https://www.robotspecialist.com.au/products/ecovacs-deebot-t50-pro-omni-vacuum-cleaner"
-      ]
+        "https://www.robotspecialist.com.au/products/ecovacs-deebot-t50-pro-omni-vacuum-cleaner",
+        "https://manuals.plus/asin/B0DRVB4DVC.pdf"
+      ],
+      "clearance": {
+        "front": 1500,
+        "sides": 500
+      }
     }
   ]
 }

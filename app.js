@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js?v=3';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=5';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -9,6 +9,7 @@ const PARAMS = [
   { key: 'cupH', group: 'cupboard', label: 'Internal height (floor to shelf)', min: 150, max: 1200, step: 5, def: 605 },
   { key: 'gapH', group: 'cupboard', label: 'Gap under door', min: 40, max: 200, step: 1, def: 108 },
   { key: 'openW', group: 'cupboard', label: 'Opening width', min: 250, max: 1200, step: 5, def: 470 },
+  { key: 'floorOut', group: 'cupboard', label: 'Clear floor in front of door (to opposite wall)', min: 0, max: 4000, step: 10, def: 1100 },
   { key: 'robotDia', group: 'robot', label: 'Diameter', min: 250, max: 400, step: 1, def: 353 },
   { key: 'robotH', group: 'robot', label: 'Height (tallest point)', min: 50, max: 130, step: 0.5, def: 80 },
   { key: 'dockW', group: 'dock', label: 'Width', min: 50, max: 700, step: 1, def: 340 },
@@ -22,6 +23,7 @@ const PARAMS = [
 const BYKEY = Object.fromEntries(PARAMS.map((p) => [p.key, p]));
 const DEFAULTS = { ...Object.fromEntries(PARAMS.map((p) => [p.key, p.def])), robotOnDock: true, modelId: 'custom' };
 const MODEL_KEYS = ['robotDia', 'robotH', 'dockW', 'dockD', 'dockH', 'dockTowerD'];
+const MODEL_SET_KEYS = [...MODEL_KEYS, 'frontClear', 'sideClear']; // set by a model, but editing them doesn't make it 'custom'
 
 const COLORS = { ok: '#2e8b57', warn: '#d08a12', fail: '#c8372d', info: '#2f6fb0', unknown: '#8a8f96' };
 const VERDICT = { ok: 'Fits', info: 'Fits', warn: 'Fits – with caveats', fail: "Won't fit", unknown: 'Missing data' };
@@ -83,10 +85,15 @@ function setParam(key, v) {
   update();
 }
 
+// Cupboard settings with clearances reset, so one model's recommended clearance doesn't carry over to another
+function modelBase() {
+  return { ...state, frontClear: DEFAULTS.frontClear, sideClear: DEFAULTS.sideClear };
+}
+
 function loadModel(id) {
   const m = models.find((x) => x.id === id);
   if (!m) { state.modelId = 'custom'; update(); return; }
-  state = { ...paramsForModel(state, m), modelId: id };
+  state = { ...paramsForModel(modelBase(), m), modelId: id };
   update();
 }
 
@@ -133,7 +140,7 @@ function readURL() {
   const q = new URLSearchParams(location.search);
   const id = q.get('m');
   const m = models.find((x) => x.id === id);
-  if (m) state = { ...paramsForModel(state, m), modelId: id };
+  if (m) state = { ...paramsForModel(modelBase(), m), modelId: id };
   for (const p of PARAMS) {
     if (q.has(p.key)) {
       const v = parseFloat(q.get(p.key));
@@ -236,6 +243,8 @@ function render3D(result) {
   gapLine.computeLineDistances();
   world.add(gapLine);
 
+  if (isNum(s.floorOut)) addBox(Math.max(W * 2.5, 1200), Math.min(H + t, 900), t, 0, Math.min(H + t, 900) / 2, -DOOR_T - s.floorOut - t / 2, wallColor, 0.25);
+
   // Dock
   const dockKnown = isNum(s.dockH);
   const dW = s.dockW || 0, dD = s.dockD || 0, dH = dockKnown ? s.dockH : Math.min(500, H);
@@ -298,7 +307,8 @@ function outsideExtent(s) {
   const dD = s.dockD || 0;
   const front = Math.max(0, (s.frontClear || 0) - (s.cupD - dD));
   const parked = dD + (s.robotOnDock ? 0 : s.robotDia || 0);
-  return Math.max(front, parked - s.cupD, 120);
+  const wall = isNum(s.floorOut) ? s.floorOut + DOOR_T + 30 : 0;
+  return Math.max(front, parked - s.cupD, wall, 120);
 }
 
 function renderTop(svg, result) {
@@ -307,7 +317,7 @@ function renderTop(svg, result) {
   const W = s.cupW, D = s.cupD;
   const half = Math.max(W / 2 + t, s.openW / 2, (s.dockW || 0) / 2 + 10, (s.robotDia || 0) / 2 + 10);
   const out = outsideExtent(s);
-  const minX = -half - 70, minY = -t - 70, w = 2 * half + 140, h = D + out + t + 170;
+  const minX = -half - 70, minY = -t - 70, w = 2 * half + 140, h = D + out + t + 220;
   svg.setAttribute('viewBox', `${minX} ${minY} ${w} ${h}`);
   const fs = Math.max(w, h) / 26;
   // walls (svg y = D - z: back wall at top, door at y = D)
@@ -323,6 +333,11 @@ function renderTop(svg, result) {
   }
   el('line', { x1: -W / 2 - t, y1: D + DOOR_T / 2, x2: W / 2 + t, y2: D + DOOR_T / 2, ...stroke('#b08a4e', 3, { 'stroke-dasharray': '10 6' }) }, svg);
   text(svg, W / 2 + t + 8, D + DOOR_T / 2, 'door', fs * 0.75, { anchor: 'start', fill: '#b08a4e' });
+  if (isNum(s.floorOut)) {
+    const wy = D + DOOR_T + s.floorOut;
+    el('rect', { x: -half - 40, y: wy, width: 2 * half + 80, height: t, fill: '#e6dfcd', ...stroke('#8d8676') }, svg);
+    text(svg, half + 30, wy - fs * 0.6, `wall ${s.floorOut}`, fs * 0.7, { anchor: 'end' });
+  }
   // approach zone
   const dD = s.dockD || 0, dW = s.dockW || 0;
   if ($('showClear').checked && s.frontClear > 0 && dD) {
@@ -347,7 +362,7 @@ function renderTop(svg, result) {
   // dimensions
   text(svg, 0, -t - 35, `width ${W}`, fs);
   text(svg, -half - 40, D / 2, `depth ${D}`, fs, { rotate: -90 });
-  text(svg, 0, D + out + 70, `opening ${s.openW}`, fs * 0.85);
+  text(svg, 0, D + out + fs * 1.4, `opening ${s.openW}`, fs * 0.85);
 }
 
 function renderSide(svg, result) {
@@ -355,7 +370,7 @@ function renderSide(svg, result) {
   svg.replaceChildren();
   const D = s.cupD, H = s.cupH;
   const out = outsideExtent(s);
-  const minX = -t - 80, minY = -t - 60, w = D + out + t + 200, h = H + t + 120;
+  const minX = -t - 80, minY = -t - 200, w = D + out + t + 200, h = H + t + 260;
   svg.setAttribute('viewBox', `${minX} ${minY} ${w} ${h}`);
   const fs = Math.max(w, h) / 26;
   const wall = { fill: '#e6dfcd', ...stroke('#8d8676') };
@@ -371,6 +386,10 @@ function renderSide(svg, result) {
   const gx = D + DOOR_T + 30;
   el('line', { x1: gx, y1: H - s.gapH, x2: gx, y2: H, ...stroke('#4a4f55', 1) }, svg);
   text(svg, gx + 10, H - s.gapH / 2, `gap ${s.gapH}`, fs * 0.8, { anchor: 'start' });
+  if (isNum(s.floorOut)) {
+    const wx = D + DOOR_T + s.floorOut;
+    el('rect', { x: wx, y: -t, width: t, height: H + t, fill: '#e6dfcd', ...stroke('#8d8676') }, svg);
+  }
   // approach zone
   const dD = s.dockD || 0;
   if ($('showClear').checked && s.frontClear > 0 && dD) {
@@ -383,7 +402,7 @@ function renderSide(svg, result) {
     const tD = isNum(s.dockTowerD) ? Math.min(s.dockTowerD, dD) : dD;
     if (dD > tD) el('rect', { x: tD, y: H - 12, width: dD - tD, height: 12, fill: '#5a6068', 'fill-opacity': 0.6, ...stroke('#22262a', 1) }, svg);
     el('rect', { x: 0, y: H - dH, width: tD, height: dH, fill: known ? '#3a4048' : '#9a9ea4', 'fill-opacity': known ? 0.75 : 0.35, rx: 6, ...stroke('#22262a', 1.5, known ? {} : { 'stroke-dasharray': '6 5' }) }, svg);
-    text(svg, tD / 2, H - dH - fs * 0.8, known ? `dock ${s.dockH}` : 'dock height ?', fs * 0.8);
+    text(svg, tD / 2, H - dH + fs * 1.0, known ? `dock ${s.dockH}` : 'dock ?', fs * 0.75, { fill: '#fff' });
   }
   // robot
   if (isNum(s.robotDia) && isNum(s.robotH)) {
@@ -392,7 +411,7 @@ function renderSide(svg, result) {
     const st = robotStatus(result);
     el('rect', { x: D - z - r, y: H - s.robotH, width: s.robotDia, height: s.robotH, rx: Math.min(14, s.robotH / 3), fill: COLORS[st], 'fill-opacity': 0.85, ...stroke('#1d2126') }, svg);
   }
-  text(svg, D / 2, -t - 30, `height ${H}`, fs);
+  text(svg, D / 2, -t - fs * 2.2, `height ${H}`, fs);
 }
 
 // ---------- Checks + table ----------
@@ -416,7 +435,7 @@ function renderChecks(result) {
 function renderTable() {
   const tbody = $('modelTable').querySelector('tbody');
   const rows = models.map((m) => {
-    const r = evaluate(paramsForModel(state, m));
+    const r = evaluate(paramsForModel(modelBase(), m));
     const worst = r.checks.reduce((a, c) => (RANK[c.status] > RANK[a.status] ? c : a), r.checks[0]);
     return { m, r, worst };
   }).sort((a, b) => RANK[a.r.overall] - RANK[b.r.overall] || a.m.robot.height - b.m.robot.height);
