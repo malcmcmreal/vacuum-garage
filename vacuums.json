@@ -1,0 +1,121 @@
+{
+  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). Use null for unknown values. Always check the manufacturer's current spec sheet before buying.",
+  "models": [
+    {
+      "id": "roborock-saros-10",
+      "brand": "Roborock",
+      "model": "Saros 10",
+      "robot": { "diameter": 353, "height": 79.8 },
+      "dock": { "width": 409, "depth": 440, "height": 470, "type": "Self-empty + mop wash" },
+      "robotOnDock": true,
+      "notes": "Retractable LiDAR turret; 79.8 mm is the robot's quoted height. Reviewer notes the dock wants ~1 m front and 0.5 m side clearance.",
+      "sources": [
+        "https://cybershack.com.au/reviews/roborock-saros-10-the-thinnest-smartest-robot-vacuum-mop-cleaning-review",
+        "https://www.techradar.com/home/robot-vacuums/roborock-saros-10r-vs-saros-10-robot-vacuum"
+      ]
+    },
+    {
+      "id": "roborock-saros-10r",
+      "brand": "Roborock",
+      "model": "Saros 10R",
+      "robot": { "diameter": 353, "height": 79.8 },
+      "dock": { "width": 475, "depth": 381, "height": 488, "type": "Self-empty + mop wash" },
+      "robotOnDock": true,
+      "notes": "No LiDAR turret (StarSight navigation), so the height is fixed.",
+      "sources": [
+        "https://www.techradar.com/home/robot-vacuums/roborock-saros-10r-vs-saros-10-robot-vacuum"
+      ]
+    },
+    {
+      "id": "roborock-qrevo-edge-2",
+      "brand": "Roborock",
+      "model": "Qrevo Edge 2",
+      "robot": { "diameter": 353, "height": 79 },
+      "dock": { "width": 340, "depth": 488, "height": 521, "type": "Self-empty + mop wash" },
+      "robotOnDock": true,
+      "notes": "Retractable LiDAR.",
+      "sources": ["https://smarthomecompared.com/robot-vacuums/roborock-qrevo-edge-2"]
+    },
+    {
+      "id": "roborock-qrevo-slim",
+      "brand": "Roborock",
+      "model": "Qrevo Slim",
+      "robot": { "diameter": 353, "height": 82 },
+      "dock": { "width": 340, "depth": 487, "height": 521, "type": "Self-empty + mop wash" },
+      "robotOnDock": true,
+      "notes": "No turret (StarSight navigation).",
+      "sources": [
+        "https://smarthomecompared.com/robot-vacuums/roborock-qrevo-slim",
+        "https://us.roborock.com/pages/roborock-qrevo-slim"
+      ]
+    },
+    {
+      "id": "roborock-qrevo-s",
+      "brand": "Roborock",
+      "model": "Qrevo S",
+      "robot": { "diameter": 353, "height": 96.5 },
+      "dock": { "width": 340, "depth": 487, "height": 521, "type": "Self-empty + mop wash" },
+      "robotOnDock": true,
+      "notes": "Fixed LiDAR turret – a typical 'standard height' robot.",
+      "sources": ["https://global.roborock.com/pages/roborock-qrevo-s"]
+    },
+    {
+      "id": "roborock-q7-m5",
+      "brand": "Roborock",
+      "model": "Q7 M5 (charging dock)",
+      "robot": { "diameter": 353, "height": 99 },
+      "dock": { "width": 160, "depth": 70, "height": 101, "type": "Charge only" },
+      "robotOnDock": false,
+      "notes": "Budget model with a small charging-only dock; robot parks in front of the dock.",
+      "sources": ["https://us.roborock.com/products/roborock-q7-m5"]
+    },
+    {
+      "id": "roborock-q7-m5-plus",
+      "brand": "Roborock",
+      "model": "Q7 M5+ (auto-empty dock)",
+      "robot": { "diameter": 325, "height": 99 },
+      "dock": { "width": 212, "depth": 178, "height": 259, "type": "Self-empty" },
+      "robotOnDock": false,
+      "notes": "Roborock quotes the robot as 325 mm on this page and 353 mm on the M5 page – check before relying on the diameter.",
+      "sources": ["https://us.roborock.com/products/roborock-q7-m5-plus/insideClient"]
+    },
+    {
+      "id": "dreame-x50-ultra",
+      "brand": "Dreame",
+      "model": "X50 Ultra",
+      "robot": { "diameter": 350, "height": 89 },
+      "dock": { "width": 340, "depth": 457, "height": 590, "type": "Self-empty + mop wash" },
+      "robotOnDock": true,
+      "notes": "89 mm is with the VersaLift LiDAR retracted; it is taller with the LiDAR raised. Dreame lists the dock as 457 x 340 x 590 (L x W x H) – width/depth orientation assumed here.",
+      "sources": [
+        "https://global.dreametech.com/products/x50-ultra",
+        "https://smarthomecompared.com/robot-vacuums/dreame-x50-ultra"
+      ]
+    },
+    {
+      "id": "ecovacs-x8-pro-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot X8 Pro Omni",
+      "robot": { "diameter": 353, "height": 98 },
+      "dock": { "width": 350, "depth": 477, "height": 533, "type": "Self-empty + mop wash" },
+      "robotOnDock": true,
+      "notes": "Dock depth includes the base/ramp (294 mm without it).",
+      "sources": [
+        "https://the-gadgeteer.com/2025/03/29/ecovacs-deebot-x8-pro-omni-robot-vac-mop-review-edging-closer-to-the-perfect-vac-mop/"
+      ]
+    },
+    {
+      "id": "ecovacs-t50-pro-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot T50 Pro Omni",
+      "robot": { "diameter": 353, "height": 81 },
+      "dock": { "width": 350, "depth": 477, "height": null, "type": "Self-empty + mop wash" },
+      "robotOnDock": true,
+      "notes": "Embedded dToF LiDAR (no turret). Dock height not confirmed yet – check the manual.",
+      "sources": [
+        "https://www.ecovacs.com/uk/deebot-robotic-vacuum-cleaner/deebot-t50-pro-omni",
+        "https://www.robotspecialist.com.au/products/ecovacs-deebot-t50-pro-omni-vacuum-cleaner"
+      ]
+    }
+  ]
+}

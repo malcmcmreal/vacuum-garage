@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vacuum Garage – will this robot vacuum fit my cupboard?</title>
+  <meta name="description" content="Check whether a robot vacuum and its dock fit inside a cupboard, with the robot driving in and out under a cut-down door. Live 3D and outline views.">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Vacuum Garage</h1>
+      <p class="tag">Will this robot vacuum and dock fit in my cupboard, with the robot driving under a cut-down door?</p>
+    </div>
+    <div class="verdict" id="verdict" aria-live="polite">–</div>
+  </header>
+
+  <main class="layout">
+    <aside class="controls" id="controls">
+      <section>
+        <h2>Model</h2>
+        <select id="modelSelect" aria-label="Vacuum model"></select>
+        <p class="model-notes" id="modelNotes"></p>
+      </section>
+      <section><h2>Cupboard</h2><div id="grp-cupboard"></div></section>
+      <section><h2>Robot</h2><div id="grp-robot"></div></section>
+      <section>
+        <h2>Dock</h2>
+        <div id="grp-dock"></div>
+        <label class="check"><input type="checkbox" id="robotOnDock"> Robot parks on the dock's ramp (inside the dock depth)</label>
+      </section>
+      <section><h2>Clearances</h2><div id="grp-clearance"></div></section>
+      <section class="actions">
+        <button id="copyLink" type="button">Copy link to this setup</button>
+        <button id="reset" type="button" class="ghost">Reset</button>
+      </section>
+    </aside>
+
+    <section class="views">
+      <div class="view3d-wrap">
+        <div id="view3d" class="view3d" aria-label="3D view of the cupboard"></div>
+        <div class="view-tools">
+          <label class="check"><input type="checkbox" id="showDoor" checked> Door</label>
+          <label class="check"><input type="checkbox" id="showClear" checked> Approach zone</label>
+          <button type="button" id="resetCam" class="ghost small">Reset view</button>
+        </div>
+      </div>
+      <div class="outlines">
+        <figure><figcaption>Top view</figcaption><svg id="topView" role="img" aria-label="Top view"></svg></figure>
+        <figure><figcaption>Side view</figcaption><svg id="sideView" role="img" aria-label="Side view"></svg></figure>
+      </div>
+      <div class="checks" id="checks"></div>
+    </section>
+  </main>
+
+  <section class="table-wrap">
+    <h2>All models against your cupboard</h2>
+    <p class="hint">Click a row to load it. Dimensions come from manufacturer and review spec sheets – always confirm before buying.</p>
+    <div class="scroll">
+      <table id="modelTable">
+        <thead>
+          <tr><th>Fit</th><th>Model</th><th>Robot H</th><th>Robot ⌀</th><th>Dock W×D×H</th><th>Dock type</th><th>Tightest check</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>All dimensions in millimetres. Missing a model or spotted a wrong number?
+      <a href="https://github.com/malcmcmreal/vacuum-garage">Open an issue or pull request on GitHub</a> – the data lives in <code>vacuums.json</code>.</p>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,467 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { evaluate, paramsForModel, RANK } from './fit.js';
+
+// ---------- Parameters ----------
+const PARAMS = [
+  { key: 'cupW', group: 'cupboard', label: 'Internal width', min: 250, max: 1200, step: 5, def: 600 },
+  { key: 'cupD', group: 'cupboard', label: 'Internal depth (to back of door)', min: 250, max: 900, step: 5, def: 560 },
+  { key: 'cupH', group: 'cupboard', label: 'Internal height (floor to shelf)', min: 150, max: 1200, step: 5, def: 700 },
+  { key: 'gapH', group: 'cupboard', label: 'Gap under door', min: 40, max: 200, step: 1, def: 100 },
+  { key: 'openW', group: 'cupboard', label: 'Opening width', min: 250, max: 1200, step: 5, def: 560 },
+  { key: 'robotDia', group: 'robot', label: 'Diameter', min: 250, max: 400, step: 1, def: 353 },
+  { key: 'robotH', group: 'robot', label: 'Height (tallest point)', min: 50, max: 130, step: 0.5, def: 80 },
+  { key: 'dockW', group: 'dock', label: 'Width', min: 50, max: 700, step: 1, def: 340 },
+  { key: 'dockD', group: 'dock', label: 'Depth (incl. ramp)', min: 30, max: 700, step: 1, def: 487 },
+  { key: 'dockH', group: 'dock', label: 'Height', min: 50, max: 800, step: 1, def: 521 },
+  { key: 'heightMargin', group: 'clearance', label: 'Safety margin under door', min: 0, max: 20, step: 1, def: 5 },
+  { key: 'sideClear', group: 'clearance', label: 'Side clearance each side of dock', min: 0, max: 500, step: 5, def: 0 },
+  { key: 'frontClear', group: 'clearance', label: 'Clear floor in front of dock', min: 0, max: 1500, step: 10, def: 500 },
+];
+const BYKEY = Object.fromEntries(PARAMS.map((p) => [p.key, p]));
+const DEFAULTS = { ...Object.fromEntries(PARAMS.map((p) => [p.key, p.def])), robotOnDock: true, modelId: 'custom' };
+const MODEL_KEYS = ['robotDia', 'robotH', 'dockW', 'dockD', 'dockH'];
+
+const COLORS = { ok: '#2e8b57', warn: '#d08a12', fail: '#c8372d', info: '#2f6fb0', unknown: '#8a8f96' };
+const VERDICT = { ok: 'Fits', info: 'Fits', warn: 'Fits – with caveats', fail: "Won't fit", unknown: 'Missing data' };
+const BADGE = { ok: 'Fits', info: 'Fits', warn: 'Caveats', fail: 'No', unknown: '?' };
+const WALL = 16;      // drawn wall thickness, mm
+const DOOR_T = 18;    // drawn door thickness, mm
+
+let models = [];
+let state = { ...DEFAULTS };
+const inputs = {};
+const $ = (id) => document.getElementById(id);
+const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
+
+// ---------- Controls ----------
+function buildControls() {
+  for (const p of PARAMS) {
+    const wrap = document.createElement('div');
+    wrap.className = 'slider';
+    const label = document.createElement('label');
+    label.htmlFor = `r-${p.key}`;
+    label.textContent = p.label;
+    const range = Object.assign(document.createElement('input'), { type: 'range', id: `r-${p.key}`, min: p.min, max: p.max, step: p.step });
+    const num = Object.assign(document.createElement('input'), { type: 'number', id: `n-${p.key}`, min: 0, max: 5000, step: p.step });
+    num.setAttribute('aria-label', `${p.label} (mm)`);
+    range.addEventListener('input', () => setParam(p.key, +range.value));
+    num.addEventListener('change', () => {
+      if (num.value === '') return;
+      setParam(p.key, +num.value);
+    });
+    wrap.append(label, range, num);
+    $(`grp-${p.group}`).append(wrap);
+    inputs[p.key] = { range, num, wrap };
+  }
+  $('robotOnDock').addEventListener('change', (e) => {
+    state.robotOnDock = e.target.checked;
+    state.modelId = 'custom';
+    update();
+  });
+  $('modelSelect').addEventListener('change', (e) => loadModel(e.target.value));
+  $('reset').addEventListener('click', () => { state = { ...DEFAULTS }; update(); resetCamera(); });
+  $('copyLink').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(location.href); flash($('copyLink'), 'Copied!'); }
+    catch { flash($('copyLink'), 'Copy failed'); }
+  });
+  $('showDoor').addEventListener('change', update);
+  $('showClear').addEventListener('change', update);
+  $('resetCam').addEventListener('click', resetCamera);
+}
+
+function flash(btn, text) {
+  const old = btn.textContent;
+  btn.textContent = text;
+  setTimeout(() => (btn.textContent = old), 1400);
+}
+
+function setParam(key, v) {
+  state[key] = v;
+  if (MODEL_KEYS.includes(key)) state.modelId = 'custom';
+  update();
+}
+
+function loadModel(id) {
+  const m = models.find((x) => x.id === id);
+  if (!m) { state.modelId = 'custom'; update(); return; }
+  state = { ...paramsForModel(state, m), modelId: id };
+  update();
+}
+
+function syncInputs() {
+  for (const p of PARAMS) {
+    const { range, num, wrap } = inputs[p.key];
+    const v = state[p.key];
+    const known = isNum(v);
+    wrap.classList.toggle('unknown', !known);
+    range.value = known ? v : p.def;
+    if (document.activeElement !== num) num.value = known ? v : '';
+    num.placeholder = known ? '' : '?';
+  }
+  $('robotOnDock').checked = !!state.robotOnDock;
+  $('modelSelect').value = state.modelId;
+  const m = models.find((x) => x.id === state.modelId);
+  const notes = $('modelNotes');
+  notes.replaceChildren();
+  if (m) {
+    notes.append(document.createTextNode(`${m.dock.type}. ${m.notes || ''} `));
+    m.sources.forEach((url, i) => {
+      const a = Object.assign(document.createElement('a'), { href: url, target: '_blank', rel: 'noopener', textContent: `[${i + 1}]` });
+      notes.append(a, document.createTextNode(' '));
+    });
+  } else {
+    notes.textContent = 'Custom dimensions – move the robot or dock sliders, or pick a model above.';
+  }
+}
+
+// ---------- URL state ----------
+function writeURL() {
+  const q = new URLSearchParams();
+  if (state.modelId !== 'custom') q.set('m', state.modelId);
+  for (const p of PARAMS) {
+    if (MODEL_KEYS.includes(p.key) && state.modelId !== 'custom') continue;
+    if (state[p.key] !== p.def && isNum(state[p.key])) q.set(p.key, state[p.key]);
+  }
+  if (state.modelId === 'custom' && !state.robotOnDock) q.set('front', '1');
+  const s = q.toString();
+  history.replaceState(null, '', s ? `?${s}` : location.pathname);
+}
+
+function readURL() {
+  const q = new URLSearchParams(location.search);
+  const id = q.get('m');
+  const m = models.find((x) => x.id === id);
+  if (m) state = { ...paramsForModel(state, m), modelId: id };
+  for (const p of PARAMS) {
+    if (q.has(p.key)) {
+      const v = parseFloat(q.get(p.key));
+      if (Number.isFinite(v)) state[p.key] = v;
+    }
+  }
+  if (q.get('front') === '1') state.robotOnDock = false;
+}
+
+function robotStatus(result) {
+  return result.checks.filter((c) => c.id === 'height' || c.id === 'width')
+    .reduce((w, c) => (RANK[c.status] > RANK[w] ? c.status : w), 'ok');
+}
+
+// ---------- 3D view ----------
+const container = $('view3d');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+container.append(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+const camera = new THREE.PerspectiveCamera(38, 1, 5, 30000);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+scene.add(new THREE.HemisphereLight(0xffffff, 0xd9d4c6, 1.7));
+const sun = new THREE.DirectionalLight(0xffffff, 1.3);
+sun.position.set(-900, 1600, -1400);
+scene.add(sun);
+const grid = new THREE.GridHelper(4000, 40, 0xd6d3c9, 0xebe9e2);
+scene.add(grid);
+const world = new THREE.Group();
+scene.add(world);
+
+function resize() {
+  const w = container.clientWidth, h = container.clientHeight;
+  renderer.setSize(w, h, false);
+  renderer.domElement.style.width = '100%';
+  renderer.domElement.style.height = '100%';
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(container);
+
+function resetCamera() {
+  const { cupW: W, cupD: D, cupH: H } = state;
+  const span = Math.max(W, D, H);
+  camera.position.set(-W * 0.4 - span * 0.85, H * 0.5 + span * 0.8, -D * 0.2 - span * 1.7);
+  controls.target.set(0, H * 0.32, D * 0.35);
+  controls.update();
+}
+
+function disposeGroup(g) {
+  g.traverse((o) => {
+    o.geometry?.dispose();
+    if (o.material) [].concat(o.material).forEach((m) => m.dispose());
+  });
+  g.clear();
+}
+
+function addBox(w, h, d, x, y, z, color, opacity = 1, edges = true) {
+  const geo = new THREE.BoxGeometry(Math.max(w, 0.1), Math.max(h, 0.1), Math.max(d, 0.1));
+  const mat = new THREE.MeshStandardMaterial({ color, transparent: opacity < 1, opacity, depthWrite: opacity >= 1, roughness: 0.85 });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(x, y, z);
+  world.add(mesh);
+  if (edges) {
+    const line = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: 0x4a4f55, transparent: true, opacity: 0.55 }));
+    line.position.copy(mesh.position);
+    world.add(line);
+  }
+  return mesh;
+}
+
+function render3D(result) {
+  disposeGroup(world);
+  const s = state;
+  const W = s.cupW, D = s.cupD, H = s.cupH, t = WALL;
+  const wallColor = 0xe6dfcd;
+
+  // Cupboard carcass (z = 0 at the door, +z into the cupboard)
+  addBox(W + 2 * t, H + t, t, 0, (H + t) / 2, D + t / 2, wallColor, 0.35);
+  addBox(t, H + t, D, -W / 2 - t / 2, (H + t) / 2, D / 2, wallColor, 0.3);
+  addBox(t, H + t, D, W / 2 + t / 2, (H + t) / 2, D / 2, wallColor, 0.3);
+  addBox(W, t, D, 0, H + t / 2, D / 2, wallColor, 0.3);
+  addBox(W, 1, D, 0, -0.5, D / 2, 0xf1ede3, 1, false);
+  if (s.openW < W) {
+    const stile = (W - s.openW) / 2;
+    addBox(stile, H, t, -W / 2 + stile / 2, H / 2, -t / 2, wallColor, 0.45);
+    addBox(stile, H, t, W / 2 - stile / 2, H / 2, -t / 2, wallColor, 0.45);
+  }
+
+  // Door (above the gap) and the gap line
+  if ($('showDoor').checked && H > s.gapH) {
+    addBox(W + 2 * t, H + t - s.gapH, DOOR_T, 0, s.gapH + (H + t - s.gapH) / 2, -DOOR_T / 2 - (s.openW < W ? t : 0), 0xc9a46a, 0.4);
+  }
+  const gapLine = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-W / 2 - 60, s.gapH, -DOOR_T - 2), new THREE.Vector3(W / 2 + 60, s.gapH, -DOOR_T - 2)]),
+    new THREE.LineDashedMaterial({ color: 0xc8372d, dashSize: 20, gapSize: 12 })
+  );
+  gapLine.computeLineDistances();
+  world.add(gapLine);
+
+  // Dock
+  const dockKnown = isNum(s.dockH);
+  const dW = s.dockW || 0, dD = s.dockD || 0, dH = dockKnown ? s.dockH : Math.min(500, H);
+  if (dW && dD) addBox(dW, dH, dD, 0, dH / 2, D - dD / 2, dockKnown ? 0x3a4048 : 0x9a9ea4, dockKnown ? 0.6 : 0.3);
+
+  // Approach zone
+  if ($('showClear').checked && s.frontClear > 0 && dD) {
+    const zw = Math.max(dW, s.robotDia || 0);
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(zw, s.frontClear),
+      new THREE.MeshBasicMaterial({ color: 0x2f6fb0, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide })
+    );
+    plane.rotation.x = -Math.PI / 2;
+    plane.position.set(0, 1, D - dD - s.frontClear / 2);
+    world.add(plane);
+  }
+
+  // Robot (parked)
+  if (isNum(s.robotDia) && isNum(s.robotH)) {
+    const r = s.robotDia / 2;
+    const zc = s.robotOnDock ? D - dD + r : D - dD - r;
+    const status = robotStatus(result);
+    const geo = new THREE.CylinderGeometry(r, r, s.robotH, 64);
+    const mat = new THREE.MeshStandardMaterial({ color: COLORS[status], roughness: 0.5 });
+    const robot = new THREE.Mesh(geo, mat);
+    robot.position.set(0, s.robotH / 2 + 0.5, zc);
+    world.add(robot);
+    const rim = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 30), new THREE.LineBasicMaterial({ color: 0x222222 }));
+    rim.position.copy(robot.position);
+    world.add(rim);
+  }
+}
+
+function animate() {
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+
+// ---------- SVG outlines ----------
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  parent?.append(e);
+  return e;
+}
+function text(parent, x, y, str, size, opts = {}) {
+  const t = el('text', { x, y, 'font-size': size, fill: opts.fill || '#4a4f55', 'text-anchor': opts.anchor || 'middle', 'dominant-baseline': 'middle', ...(opts.rotate ? { transform: `rotate(${opts.rotate} ${x} ${y})` } : {}) }, parent);
+  t.textContent = str;
+  return t;
+}
+const stroke = (c, w = 1.5, extra = {}) => ({ stroke: c, 'stroke-width': w, 'vector-effect': 'non-scaling-stroke', ...extra });
+
+function outsideExtent(s) {
+  const dD = s.dockD || 0;
+  const front = Math.max(0, (s.frontClear || 0) - (s.cupD - dD));
+  const parked = dD + (s.robotOnDock ? 0 : s.robotDia || 0);
+  return Math.max(front, parked - s.cupD, 120);
+}
+
+function renderTop(svg, result) {
+  const s = state, t = WALL;
+  svg.replaceChildren();
+  const W = s.cupW, D = s.cupD;
+  const half = Math.max(W / 2 + t, s.openW / 2, (s.dockW || 0) / 2 + 10, (s.robotDia || 0) / 2 + 10);
+  const out = outsideExtent(s);
+  const minX = -half - 70, minY = -t - 70, w = 2 * half + 140, h = D + out + t + 170;
+  svg.setAttribute('viewBox', `${minX} ${minY} ${w} ${h}`);
+  const fs = Math.max(w, h) / 26;
+  // walls (svg y = D - z: back wall at top, door at y = D)
+  const wall = { fill: '#e6dfcd', ...stroke('#8d8676') };
+  el('rect', { x: -W / 2 - t, y: -t, width: W + 2 * t, height: t, ...wall }, svg);
+  el('rect', { x: -W / 2 - t, y: 0, width: t, height: D, ...wall }, svg);
+  el('rect', { x: W / 2, y: 0, width: t, height: D, ...wall }, svg);
+  el('rect', { x: -W / 2, y: 0, width: W, height: D, fill: '#faf8f2' }, svg);
+  // opening + door
+  if (s.openW < W) {
+    el('rect', { x: -W / 2, y: D - t, width: (W - s.openW) / 2, height: t, ...wall }, svg);
+    el('rect', { x: s.openW / 2, y: D - t, width: (W - s.openW) / 2, height: t, ...wall }, svg);
+  }
+  el('line', { x1: -W / 2 - t, y1: D + DOOR_T / 2, x2: W / 2 + t, y2: D + DOOR_T / 2, ...stroke('#b08a4e', 3, { 'stroke-dasharray': '10 6' }) }, svg);
+  text(svg, W / 2 + t + 8, D + DOOR_T / 2, 'door', fs * 0.75, { anchor: 'start', fill: '#b08a4e' });
+  // approach zone
+  const dD = s.dockD || 0, dW = s.dockW || 0;
+  if ($('showClear').checked && s.frontClear > 0 && dD) {
+    const zw = Math.max(dW, s.robotDia || 0);
+    el('rect', { x: -zw / 2, y: dD, width: zw, height: s.frontClear, fill: COLORS.info, 'fill-opacity': 0.1, ...stroke(COLORS.info, 1, { 'stroke-dasharray': '6 5' }) }, svg);
+  }
+  // dock
+  if (dD && dW) {
+    const known = isNum(s.dockH);
+    el('rect', { x: -dW / 2, y: 0, width: dW, height: dD, fill: known ? '#3a4048' : '#9a9ea4', 'fill-opacity': known ? 0.75 : 0.4, rx: 6, ...stroke('#22262a') }, svg);
+    text(svg, 0, Math.min(dD / 2, 60), 'dock', fs * 0.8, { fill: '#fff' });
+  }
+  // robot
+  if (isNum(s.robotDia)) {
+    const r = s.robotDia / 2;
+    const z = s.robotOnDock ? D - dD + r : D - dD - r;
+    const st = robotStatus(result);
+    el('circle', { cx: 0, cy: D - z, r, fill: COLORS[st], 'fill-opacity': 0.8, ...stroke('#1d2126') }, svg);
+  }
+  // dimensions
+  text(svg, 0, -t - 35, `width ${W}`, fs);
+  text(svg, -half - 40, D / 2, `depth ${D}`, fs, { rotate: -90 });
+  text(svg, 0, D + out + 70, `opening ${s.openW}`, fs * 0.85);
+}
+
+function renderSide(svg, result) {
+  const s = state, t = WALL;
+  svg.replaceChildren();
+  const D = s.cupD, H = s.cupH;
+  const out = outsideExtent(s);
+  const minX = -t - 80, minY = -t - 60, w = D + out + t + 200, h = H + t + 120;
+  svg.setAttribute('viewBox', `${minX} ${minY} ${w} ${h}`);
+  const fs = Math.max(w, h) / 26;
+  const wall = { fill: '#e6dfcd', ...stroke('#8d8676') };
+  // svg x = D - z (back wall at left, door at x = D); svg y = H - height
+  el('rect', { x: 0, y: 0, width: D, height: H, fill: '#faf8f2' }, svg);
+  el('rect', { x: -t, y: -t, width: t, height: H + t, ...wall }, svg);
+  el('rect', { x: 0, y: -t, width: D, height: t, ...wall }, svg);
+  el('line', { x1: -t - 40, y1: H, x2: D + out + 120, y2: H, ...stroke('#8d8676', 2) }, svg);
+  // door
+  if (H > s.gapH) el('rect', { x: D, y: -t, width: DOOR_T, height: H + t - s.gapH, fill: '#c9a46a', 'fill-opacity': 0.7, ...stroke('#8a6a36') }, svg);
+  // gap limit
+  el('line', { x1: D - 40, y1: H - s.gapH, x2: D + out + 60, y2: H - s.gapH, ...stroke(COLORS.fail, 1.2, { 'stroke-dasharray': '8 5' }) }, svg);
+  const gx = D + DOOR_T + 30;
+  el('line', { x1: gx, y1: H - s.gapH, x2: gx, y2: H, ...stroke('#4a4f55', 1) }, svg);
+  text(svg, gx + 10, H - s.gapH / 2, `gap ${s.gapH}`, fs * 0.8, { anchor: 'start' });
+  // approach zone
+  const dD = s.dockD || 0;
+  if ($('showClear').checked && s.frontClear > 0 && dD) {
+    el('rect', { x: dD, y: H - 6, width: s.frontClear, height: 6, fill: COLORS.info, 'fill-opacity': 0.35 }, svg);
+  }
+  // dock
+  if (dD) {
+    const known = isNum(s.dockH);
+    const dH = known ? s.dockH : Math.min(500, H);
+    el('rect', { x: 0, y: H - dH, width: dD, height: dH, fill: known ? '#3a4048' : '#9a9ea4', 'fill-opacity': known ? 0.75 : 0.35, rx: 6, ...stroke('#22262a', 1.5, known ? {} : { 'stroke-dasharray': '6 5' }) }, svg);
+    text(svg, dD / 2, H - dH - fs * 0.8, known ? `dock ${s.dockH}` : 'dock height ?', fs * 0.8);
+  }
+  // robot
+  if (isNum(s.robotDia) && isNum(s.robotH)) {
+    const r = s.robotDia / 2;
+    const z = s.robotOnDock ? D - dD + r : D - dD - r;
+    const st = robotStatus(result);
+    el('rect', { x: D - z - r, y: H - s.robotH, width: s.robotDia, height: s.robotH, rx: Math.min(14, s.robotH / 3), fill: COLORS[st], 'fill-opacity': 0.85, ...stroke('#1d2126') }, svg);
+  }
+  text(svg, D / 2, -t - 30, `height ${H}`, fs);
+}
+
+// ---------- Checks + table ----------
+function renderChecks(result) {
+  const v = $('verdict');
+  v.className = `verdict ${result.overall}`;
+  v.textContent = VERDICT[result.overall];
+  const box = $('checks');
+  box.replaceChildren(...result.checks.map((c) => {
+    const d = document.createElement('div');
+    d.className = `check-card ${c.status}`;
+    const strong = document.createElement('strong');
+    strong.textContent = c.label;
+    const span = document.createElement('span');
+    span.textContent = c.detail;
+    d.append(strong, span);
+    return d;
+  }));
+}
+
+function renderTable() {
+  const tbody = $('modelTable').querySelector('tbody');
+  const rows = models.map((m) => {
+    const r = evaluate(paramsForModel(state, m));
+    const worst = r.checks.reduce((a, c) => (RANK[c.status] > RANK[a.status] ? c : a), r.checks[0]);
+    return { m, r, worst };
+  }).sort((a, b) => RANK[a.r.overall] - RANK[b.r.overall] || a.m.robot.height - b.m.robot.height);
+  tbody.replaceChildren(...rows.map(({ m, r, worst }) => {
+    const tr = document.createElement('tr');
+    if (m.id === state.modelId) tr.className = 'selected';
+    const fmt = (v) => (isNum(v) ? v : '?');
+    const cells = [
+      `<span class="badge ${r.overall}">${BADGE[r.overall]}</span>`,
+      `${m.brand} ${m.model}`,
+      fmt(m.robot.height), fmt(m.robot.diameter),
+      `${fmt(m.dock.width)} × ${fmt(m.dock.depth)} × ${fmt(m.dock.height)}`,
+      m.dock.type,
+      r.overall === 'ok' || r.overall === 'info' ? '–' : `${worst.label}: ${worst.detail}`,
+    ];
+    cells.forEach((html, i) => {
+      const td = document.createElement('td');
+      if (i === 0) td.innerHTML = html; else td.textContent = html;
+      if (i >= 2 && i <= 4) td.className = 'num';
+      tr.append(td);
+    });
+    tr.addEventListener('click', () => { loadModel(m.id); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    return tr;
+  }));
+}
+
+// ---------- Main update ----------
+function update() {
+  syncInputs();
+  const result = evaluate(state);
+  renderChecks(result);
+  render3D(result);
+  renderTop($('topView'), result);
+  renderSide($('sideView'), result);
+  renderTable();
+  writeURL();
+}
+
+async function init() {
+  buildControls();
+  try {
+    const res = await fetch('vacuums.json');
+    models = (await res.json()).models;
+  } catch (e) {
+    console.error('Could not load vacuums.json', e);
+  }
+  const sel = $('modelSelect');
+  sel.append(new Option('Custom dimensions', 'custom'));
+  for (const m of models) sel.append(new Option(`${m.brand} ${m.model}`, m.id));
+  readURL();
+  resize();
+  update();
+  resetCamera();
+  animate();
+}
+
+init();
