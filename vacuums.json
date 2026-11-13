@@ -196,12 +196,12 @@
       "dock": {
         "width": 350,
         "depth": 477,
-        "height": null,
+        "height": 533,
         "type": "Self-empty + mop wash",
         "towerDepth": 294
       },
       "robotOnDock": true,
-      "notes": "Embedded dToF LiDAR (no turret). Dock height not confirmed yet – check the manual.",
+      "notes": "Embedded dToF LiDAR (no turret). Dock depth includes the base/ramp (294 mm without it).",
       "sources": [
         "https://www.ecovacs.com/uk/deebot-robotic-vacuum-cleaner/deebot-t50-pro-omni",
         "https://www.robotspecialist.com.au/products/ecovacs-deebot-t50-pro-omni-vacuum-cleaner"
