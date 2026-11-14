@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js?v=8';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=9';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -16,7 +16,7 @@ const PARAMS = [
   { key: 'dockH', group: 'dock', label: 'Height', min: 50, max: 800, step: 1, def: 521 },
   { key: 'dockTowerD', group: 'dock', label: 'Tower depth (without ramp) – optional', min: 30, max: 700, step: 1, def: null, show: 300, optional: true },
   { key: 'heightMargin', group: 'clearance', label: 'Safety margin under door', min: 0, max: 20, step: 1, def: 5 },
-  { key: 'sideClear', group: 'clearance', label: 'Side clearance each side of dock', min: 0, max: 500, step: 5, def: 0 },
+  { key: 'sideClear', group: 'clearance', label: 'Minimum space each side of dock', min: 0, max: 200, step: 5, def: 50 },
 ];
 const BYKEY = Object.fromEntries(PARAMS.map((p) => [p.key, p]));
 const DEFAULTS = { ...Object.fromEntries(PARAMS.map((p) => [p.key, p.def])), robotOnDock: true, modelId: 'custom' };

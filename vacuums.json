@@ -1,5 +1,5 @@
 {
-  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. clearance.sides (optional): recommended clear space on each side of the dock, from the manual. price (optional): AU dollars – rrp = recommended retail price, seen = a recent sale price found, with source; prices change often.",
+  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. price (optional): AU dollars – rrp = recommended retail price, seen = a recent sale price found, with source; prices change often.",
   "models": [
     {
       "id": "roborock-saros-10",
@@ -22,9 +22,6 @@
         "https://cybershack.com.au/reviews/roborock-saros-10-the-thinnest-smartest-robot-vacuum-mop-cleaning-review",
         "https://www.techradar.com/home/robot-vacuums/roborock-saros-10r-vs-saros-10-robot-vacuum"
       ],
-      "clearance": {
-        "sides": 500
-      },
       "price": {
         "rrp": 2999,
         "source": "https://www.aap.com.au/aapreleases/cision20250325ae49345"
@@ -251,9 +248,6 @@
         "https://www.robotspecialist.com.au/products/ecovacs-deebot-t50-pro-omni-vacuum-cleaner",
         "https://manuals.plus/asin/B0DRVB4DVC.pdf"
       ],
-      "clearance": {
-        "sides": 500
-      },
       "price": {
         "rrp": 1499,
         "seen": 749,
@@ -276,9 +270,6 @@
         "towerDepth": 294
       },
       "robotOnDock": true,
-      "clearance": {
-        "sides": 500
-      },
       "notes": "Same OMNI station as the T50 Pro Omni, but a taller 98 mm robot (some retailers wrongly list 81 mm). Side clearance taken from the T50 family guidance.",
       "sources": [
         "https://www.ecovacs.com/us/deebot-robotic-vacuum-cleaner/bundle-deebot-t50-max-winbot-w2-pro-omni",
@@ -306,9 +297,6 @@
         "towerDepth": 276
       },
       "robotOnDock": true,
-      "clearance": {
-        "sides": 500
-      },
       "notes": "OZMO roller mop. Compact 338 mm wide station; tower 276 mm deep without the base.",
       "price": {
         "rrp": 2299,
@@ -336,9 +324,6 @@
         "towerDepth": 276
       },
       "robotOnDock": true,
-      "clearance": {
-        "sides": 500
-      },
       "notes": "Updated T80 (24,800 Pa, OZMO Roller 2.0). Same station size as the T80.",
       "price": {
         "rrp": 1799,
@@ -366,9 +351,6 @@
         "towerDepth": 276
       },
       "robotOnDock": true,
-      "clearance": {
-        "sides": 500
-      },
       "notes": "Roller mop flagship (2025). Same compact station footprint as the T80.",
       "price": {
         "note": "US RRP US$1,599; Australian availability not confirmed"
@@ -393,9 +375,6 @@
         "towerDepth": 275
       },
       "robotOnDock": true,
-      "clearance": {
-        "sides": 500
-      },
       "notes": "2026 model, 30,000 Pa. Tower depth ~275 mm without the ramp is an estimate.",
       "price": {
         "rrp": 2299,
@@ -423,9 +402,6 @@
         "towerDepth": 275
       },
       "robotOnDock": true,
-      "clearance": {
-        "sides": 500
-      },
       "notes": "'Mini OMNI' station. Tower depth ~275 mm without the ramp is an estimate.",
       "price": {
         "rrp": 1749,
@@ -452,9 +428,6 @@
         "towerDepth": 275
       },
       "robotOnDock": true,
-      "clearance": {
-        "sides": 500
-      },
       "notes": "Same station as the T30 Omni but a taller 104 mm robot. Tower depth ~275 mm without the ramp is an estimate.",
       "price": {
         "rrp": 1799,
@@ -481,9 +454,6 @@
         "towerDepth": 275
       },
       "robotOnDock": true,
-      "clearance": {
-        "sides": 500
-      },
       "notes": "Budget Omni, JB Hi-Fi exclusive in Australia. Tower depth ~275 mm without the ramp is an estimate.",
       "price": {
         "rrp": 1899,
@@ -509,9 +479,6 @@
         "type": "Self-empty + mop wash (mini)"
       },
       "robotOnDock": true,
-      "clearance": {
-        "sides": 500
-      },
       "notes": "Small 286 mm robot with a tiny Omni station. Station height is quoted as 385–400 mm by different sources; depth 385 mm is from one retailer.",
       "price": {
         "note": "EU RRP €499; Australian availability not confirmed"

@@ -36,8 +36,8 @@ export function evaluate(p) {
   if (isNum(p.dockW)) {
     const needed = p.dockW + 2 * p.sideClear;
     if (p.dockW > p.cupW) add('dockW', 'Dock width', 'fail', `Dock is ${mm(p.dockW - p.cupW)} wider than the cupboard.`);
-    else if (needed > p.cupW) add('dockW', 'Dock width', 'warn', `Dock fits, but not with ${mm(p.sideClear)} each side (${mm(p.cupW - p.dockW)} total spare).`);
-    else add('dockW', 'Dock width', 'ok', `${mm(p.cupW - p.dockW)} spare across the cupboard.`);
+    else if (needed > p.cupW) add('dockW', 'Dock width', 'warn', `Dock fits, but only ${mm((p.cupW - p.dockW) / 2)} each side (less than ${mm(p.sideClear)}).`);
+    else add('dockW', 'Dock width', 'ok', `${mm((p.cupW - p.dockW) / 2)} each side of the dock.`);
   } else add('dockW', 'Dock width', 'unknown', 'Dock width unknown.');
 
   // 4. Dock height vs internal height
@@ -62,8 +62,8 @@ export function evaluate(p) {
         : `Dock is ${mm(p.dockD - p.cupD)} deeper than the cupboard. If part of that is a low ramp, enter the tower depth – the ramp can sit under the door.`);
     } else if (over > 0) {
       const what = p.dockD > p.cupD ? 'Ramp and parked robot poke' : 'Parked robot pokes';
-      add('depth', 'Depth when parked', robotFitsUnder ? 'warn' : 'fail', robotFitsUnder
-        ? `${what} out under the door by ${mm(over)}.`
+      add('depth', 'Depth when parked', robotFitsUnder ? 'ok' : 'fail', robotFitsUnder
+        ? `${what} out under the door by ${mm(over)} – fine, it sits under the door.`
         : `Parked robot sticks out ${mm(over)} and is too tall to sit under the door.`);
     } else add('depth', 'Depth when parked', 'ok', `${mm(-over)} spare between the parked robot and the door.`);
   } else add('depth', 'Depth when parked', 'unknown', 'Dock depth unknown.');
@@ -94,6 +94,5 @@ export function paramsForModel(base, m) {
     dockH: m.dock.height,
     dockTowerD: m.dock.towerDepth ?? null,
     robotOnDock: m.robotOnDock,
-    sideClear: m.clearance?.sides ?? base.sideClear,
   };
 }
