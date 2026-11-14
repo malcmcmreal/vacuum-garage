@@ -825,6 +825,40 @@
         "stars": 3.86,
         "url": "https://vacuumwars.com/narwal-flow-2-review/"
       }
+    },
+    {
+      "id": "dyson-spot-scrub-ai",
+      "brand": "Dyson",
+      "model": "Spot+Scrub Ai",
+      "robot": {
+        "diameter": 373,
+        "height": 110
+      },
+      "dock": {
+        "width": 440,
+        "depth": 508,
+        "height": 455,
+        "type": "Self-empty (cyclonic) + roller-mop wash"
+      },
+      "robotOnDock": true,
+      "colours": [
+        "black"
+      ],
+      "colourNote": "Black with purple accents.",
+      "notes": "Robot 373 x 370 x 110 mm (fixed height). Dock 440 W x 508 D x 455 H. Tower depth without the ramp isn't published.",
+      "price": {
+        "rrp": 1999,
+        "seen": 1795,
+        "source": "https://www.binglee.com.au/brands/dyson/appliances/floorcare/robotic-vacuums-and-mops"
+      },
+      "vacuumWars": {
+        "stars": 3.49,
+        "url": "https://vacuumwars.com/dyson-spotscrub-ai-launch/"
+      },
+      "sources": [
+        "https://www.dysoncanada.ca/en/vacuum-cleaners/robot/spot-scrub-ai/black",
+        "https://itwire.com/your-it-news/home-it/dyson-s-first-robot-mop-promises-to-outsmart-your-grimy-floors-with-ai"
+      ]
     }
   ]
 }
