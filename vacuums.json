@@ -561,12 +561,13 @@
       },
       "dock": {
         "width": 330,
-        "depth": 289,
+        "depth": 400,
         "height": 460,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 289
       },
-      "robotOnDock": false,
-      "notes": "Very compact station. Exactly where the robot sits when docked isn't published; 'parks in front' is a conservative assumption, so the overhang shown may be larger than reality. Eufy advises against putting the station inside a closed wardrobe because of moisture.",
+      "robotOnDock": true,
+      "notes": "Very compact station (330 x 289 x 460 mm). Total depth with the robot docked is ~400 mm (owner estimate). Eufy advises against putting the station inside a closed wardrobe because of moisture.",
       "price": {
         "seen": 799,
         "source": "https://www.digitalreviews.net/reviews/lifestyle/eufy-omni-c20-robot-vacuum-review/"
