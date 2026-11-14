@@ -262,6 +262,39 @@
       ]
     },
     {
+      "id": "dreame-x60-ultra",
+      "brand": "Dreame",
+      "model": "X60 Ultra",
+      "robot": {
+        "diameter": 350,
+        "height": 79.5
+      },
+      "dock": {
+        "width": 390,
+        "depth": 423,
+        "height": 499,
+        "type": "Self-empty + mop wash",
+        "towerDepth": 300
+      },
+      "robotOnDock": true,
+      "colours": [
+        "black",
+        "white"
+      ],
+      "colourNote": "Australian listings are black.",
+      "notes": "79.5 mm is with the VersaLift LiDAR retracted; it is 102.8 mm with it raised (only 5 mm under your door), so it relies on retracting to pass under. Dock 390 W x 423 D x 499 H. Tower depth ~300 mm without the ramp is an estimate.",
+      "price": {
+        "rrp": 2999,
+        "seen": 2299,
+        "source": "https://jbhifi.com.au/products/dreame-x60-ultra-robot-vacuum-cleaner"
+      },
+      "sources": [
+        "https://ae.dreametech.com/products/dreame-x60-ultra-complete-robot-vacuum-cleaner",
+        "https://www.robotspecialist.com.au/collections/all/products/dreame-x60-ultra-robotic-vacuum-cleaner",
+        "https://www.appliancesonline.com.au/product/dreame-x60-ultra-robot-vacuum-cleaner-with-mop-dre-x60u/"
+      ]
+    },
+    {
       "id": "ecovacs-x8-pro-omni",
       "brand": "Ecovacs",
       "model": "Deebot X8 Pro Omni",
