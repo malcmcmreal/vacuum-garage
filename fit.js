@@ -62,8 +62,11 @@ export function evaluate(p) {
         : `Dock is ${mm(p.dockD - p.cupD)} deeper than the cupboard. If part of that is a low ramp, enter the tower depth – the ramp can sit under the door.`);
     } else if (over > 0) {
       const what = p.dockD > p.cupD ? 'Ramp and parked robot poke' : 'Parked robot pokes';
-      add('depth', 'Depth when parked', robotFitsUnder ? 'ok' : 'fail', robotFitsUnder
-        ? `${what} out under the door by ${mm(over)} – fine, it sits under the door.`
+      const maxOut = isNum(p.maxOverhang) ? p.maxOverhang : Infinity;
+      add('depth', 'Depth when parked', !robotFitsUnder ? 'fail' : over > maxOut ? 'warn' : 'ok', robotFitsUnder
+        ? (over > maxOut
+          ? `${what} out under the door by ${mm(over)} – more than ${mm(maxOut)}.`
+          : `${what} out under the door by ${mm(over)} – fine, it sits under the door.`)
         : `Parked robot sticks out ${mm(over)} and is too tall to sit under the door.`);
     } else add('depth', 'Depth when parked', 'ok', `${mm(-over)} spare between the parked robot and the door.`);
   } else add('depth', 'Depth when parked', 'unknown', 'Dock depth unknown.');

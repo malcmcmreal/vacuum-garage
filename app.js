@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js?v=12';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=13';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -16,6 +16,7 @@ const PARAMS = [
   { key: 'dockH', group: 'dock', label: 'Height', min: 50, max: 800, step: 1, def: 521 },
   { key: 'dockTowerD', group: 'dock', label: 'Tower depth (without ramp) – optional', min: 30, max: 700, step: 1, def: null, show: 300, optional: true },
   { key: 'heightMargin', group: 'clearance', label: 'Minimum space above robot (under door)', min: 0, max: 30, step: 1, def: 10 },
+  { key: 'maxOverhang', group: 'clearance', label: 'Maximum poke-out under door', min: 0, max: 300, step: 5, def: 90 },
   { key: 'sideClear', group: 'clearance', label: 'Minimum space each side of dock', min: 0, max: 200, step: 1, def: 10 },
 ];
 const BYKEY = Object.fromEntries(PARAMS.map((p) => [p.key, p]));
@@ -512,6 +513,7 @@ function renderTable() {
       fmt(m.robot.height), fmt(m.robot.diameter),
       `${fmt(m.dock.width)} × ${fmt(m.dock.depth)} × ${fmt(m.dock.height)}`,
       m.dock.type,
+      r.spaces.toDoor != null && r.spaces.toDoor < 0 ? `${Math.round(-r.spaces.toDoor)}` : '–',
       priceText(m.price),
       r.overall === 'ok' || r.overall === 'info' ? '–' : `${worst.label}: ${worst.detail}`,
     ];
@@ -520,8 +522,9 @@ function renderTable() {
       if (i === 0) td.innerHTML = html;
       else if (i === 2) td.append(swatches(m.colours));
       else td.textContent = html;
-      if ((i >= 3 && i <= 5) || i === 7) td.className = 'num';
-      if (i === 7 && m.price?.note) td.title = m.price.note;
+      if ((i >= 3 && i <= 5) || i === 7 || i === 8) td.className = 'num';
+      if (i === 7 && r.spaces.toDoor < -(state.maxOverhang ?? Infinity)) td.classList.add('over');
+      if (i === 8 && m.price?.note) td.title = m.price.note;
       tr.append(td);
     });
     tr.addEventListener('click', () => { loadModel(m.id); window.scrollTo({ top: 0, behavior: 'smooth' }); });
