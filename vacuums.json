@@ -722,7 +722,8 @@
         "width": 360,
         "depth": 450,
         "height": 530,
-        "type": "Self-empty + track-mop wash (semi-enclosed dock)"
+        "type": "Self-empty + track-mop wash (semi-enclosed dock)",
+        "towerDepth": 300
       },
       "robotOnDock": true,
       "colours": [
@@ -730,7 +731,7 @@
         "white"
       ],
       "colourNote": "Original finish is dark grey/black; white added mid-2026.",
-      "notes": "Robot 351 x 363.5 x 95 mm (fixed height, no turret). Basic dock is quoted as 450 x 360 x 530 mm – width 360 / depth 450 orientation assumed. The robot parks inside the semi-enclosed dock; whether part of the 450 mm is a low ramp isn't published, so enter a tower depth if you can measure one. (The compact 433 x 410 x 281 mm dock needs plumbing for auto refill/drain.)",
+      "notes": "Robot 351 x 363.5 x 95 mm (fixed height, no turret). Basic dock is quoted as 450 x 360 x 530 mm – width 360 / depth 450 orientation assumed. Tower depth ~275–300 mm without the ramp is an estimate (300 used). (The compact 433 x 410 x 281 mm dock needs plumbing for auto refill/drain.)",
       "price": {
         "rrp": 2999,
         "seen": 2099,
