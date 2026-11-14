@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js?v=13';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=14';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -66,6 +66,16 @@ function swatches(cols) {
   return span;
 }
 const hasDark = (m) => (m.colours || []).some((c) => DARK.has(c));
+
+// ---------- Vacuum Wars ----------
+function vwCell(vw) {
+  if (!vw) { const s = document.createElement('span'); s.textContent = '–'; s.title = 'Not rated by Vacuum Wars'; return s; }
+  const a = Object.assign(document.createElement('a'), { href: vw.url, target: '_blank', rel: 'noopener', textContent: `★ ${vw.stars.toFixed(2)}` });
+  a.className = 'vw';
+  if (vw.note) a.title = vw.note;
+  a.addEventListener('click', (e) => e.stopPropagation());
+  return a;
+}
 
 // ---------- Controls ----------
 function buildControls() {
@@ -155,6 +165,10 @@ function syncInputs() {
     cLine.append('Colour: ', swatches(m.colours));
     if (m.colourNote) cLine.append(` (${m.colourNote})`);
     notes.append(cLine, document.createElement('br'));
+    const vLine = document.createElement('span');
+    vLine.append('Vacuum Wars: ', vwCell(m.vacuumWars));
+    if (m.vacuumWars?.note) vLine.append(` (${m.vacuumWars.note})`);
+    notes.append(vLine, document.createElement('br'));
     notes.append(document.createTextNode(`${m.dock.type}. ${m.notes || ''} `));
     m.sources.forEach((url, i) => {
       const a = Object.assign(document.createElement('a'), { href: url, target: '_blank', rel: 'noopener', textContent: `[${i + 1}]` });
@@ -510,6 +524,7 @@ function renderTable() {
       `<span class="badge ${r.overall}">${BADGE[r.overall]}</span>`,
       `${m.brand} ${m.model}`,
       null,
+      null,
       fmt(m.robot.height), fmt(m.robot.diameter),
       `${fmt(m.dock.width)} × ${fmt(m.dock.depth)} × ${fmt(m.dock.height)}`,
       m.dock.type,
@@ -521,10 +536,11 @@ function renderTable() {
       const td = document.createElement('td');
       if (i === 0) td.innerHTML = html;
       else if (i === 2) td.append(swatches(m.colours));
+      else if (i === 3) td.append(vwCell(m.vacuumWars));
       else td.textContent = html;
-      if ((i >= 3 && i <= 5) || i === 7 || i === 8) td.className = 'num';
-      if (i === 7 && r.spaces.toDoor < -(state.maxOverhang ?? Infinity)) td.classList.add('over');
-      if (i === 8 && m.price?.note) td.title = m.price.note;
+      if ((i >= 3 && i <= 6) || i === 8 || i === 9) td.classList.add('num');
+      if (i === 8 && r.spaces.toDoor < -(state.maxOverhang ?? Infinity)) td.classList.add('over');
+      if (i === 9 && m.price?.note) td.title = m.price.note;
       tr.append(td);
     });
     tr.addEventListener('click', () => { loadModel(m.id); window.scrollTo({ top: 0, behavior: 'smooth' }); });

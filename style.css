@@ -122,3 +122,5 @@ footer { padding: 0.5rem 1.5rem 2rem; color: var(--muted); font-size: 0.85rem; }
 .swatch-label { margin-left: 4px; color: var(--muted); font-size: 0.82rem; }
 .table-filter { margin: 0 0 0.6rem; }
 td.over { color: var(--warn); font-weight: 700; }
+a.vw { color: var(--ink); text-decoration: none; font-weight: 600; }
+a.vw:hover { text-decoration: underline; }

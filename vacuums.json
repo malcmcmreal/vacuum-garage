@@ -1,5 +1,5 @@
 {
-  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. price (optional): AU dollars – rrp = recommended retail price, seen = a recent sale price found, with source; prices change often. colours: robot colours found for sale (empty = not checked).",
+  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. price (optional): AU dollars – rrp = recommended retail price, seen = a recent sale price found, with source; prices change often. colours: robot colours found for sale (empty = not checked). vacuumWars: Vacuum Wars Stars rating (out of 5; their scores shift over time with price and user reviews) and the page it came from. Missing = not rated.",
   "models": [
     {
       "id": "roborock-saros-10",
@@ -29,7 +29,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.29,
+        "url": "https://vacuumwars.com/roborock-buyer-guide/"
+      }
     },
     {
       "id": "roborock-saros-10r",
@@ -59,7 +63,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.41,
+        "url": "https://vacuumwars.com/roborock-saros-10r-review/"
+      }
     },
     {
       "id": "roborock-qrevo-edge-2",
@@ -87,7 +95,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.77,
+        "url": "https://vacuumwars.com/compare/roborock/roborock_qrevo_edge_2/"
+      }
     },
     {
       "id": "roborock-qrevo-edge-3-pro",
@@ -117,7 +129,11 @@
       "sources": [
         "https://us.roborock.com/products/roborock-qrevo-edge-3-pro-robot-vacuum",
         "https://eftm.com/2026/10/qrevo-edge-3-pro-review-flagship-cleaning-upgrades-to-36000pa-suction-and-hot-water-sanitising-281617"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.99,
+        "url": "https://vacuumwars.com/compare/robot-vacuums/roborock_qrevo_edge_3_pro/"
+      }
     },
     {
       "id": "roborock-qrevo-slim",
@@ -146,7 +162,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.2,
+        "url": "https://vacuumwars.com/roborock-buyer-guide/"
+      }
     },
     {
       "id": "roborock-qrevo-s",
@@ -174,7 +194,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 2.75,
+        "url": "https://vacuumwars.com/roborock-buyer-guide/"
+      }
     },
     {
       "id": "roborock-q7-m5",
@@ -201,7 +225,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 2.01,
+        "url": "https://vacuumwars.com/roborock-q7-m5-and-m5-review/"
+      }
     },
     {
       "id": "roborock-q7-m5-plus",
@@ -228,7 +256,12 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 2.01,
+        "url": "https://vacuumwars.com/roborock-q7-m5-and-m5-review/",
+        "note": "Rated with the Q7 M5"
+      }
     },
     {
       "id": "dreame-x50-ultra",
@@ -259,7 +292,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.58,
+        "url": "https://vacuumwars.com/compare/robot-vacuums/dreame_x50_ultra/"
+      }
     },
     {
       "id": "dreame-x60-ultra",
@@ -292,7 +329,12 @@
         "https://ae.dreametech.com/products/dreame-x60-ultra-complete-robot-vacuum-cleaner",
         "https://www.robotspecialist.com.au/collections/all/products/dreame-x60-ultra-robotic-vacuum-cleaner",
         "https://www.appliancesonline.com.au/product/dreame-x60-ultra-robot-vacuum-cleaner-with-mop-dre-x60u/"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.96,
+        "url": "https://vacuumwars.com/dreame-x60-first-look/",
+        "note": "Rating is for the US X60 Max Ultra Complete"
+      }
     },
     {
       "id": "ecovacs-x8-pro-omni",
@@ -321,7 +363,11 @@
       },
       "colours": [
         "black"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.03,
+        "url": "https://vacuumwars.com/ecovacs-buyers-guide/"
+      }
     },
     {
       "id": "ecovacs-t50-pro-omni",
@@ -354,7 +400,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.04,
+        "url": "https://vacuumwars.com/ecovacs-buyers-guide/"
+      }
     },
     {
       "id": "ecovacs-t50-max-pro-omni",
@@ -384,7 +434,12 @@
       },
       "colours": [
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.36,
+        "url": "https://vacuumwars.com/amazon-big-spring-sale/",
+        "note": "Figure from early 2026"
+      }
     },
     {
       "id": "ecovacs-t80-omni",
@@ -415,7 +470,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.41,
+        "url": "https://vacuumwars.com/ecovacs-buyers-guide/"
+      }
     },
     {
       "id": "ecovacs-t80s-omni",
@@ -445,7 +504,11 @@
       ],
       "colours": [
         "black"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.98,
+        "url": "https://compare.vacuumwars.com/compare/robot-vacuums/"
+      }
     },
     {
       "id": "ecovacs-x9-pro-omni",
@@ -472,7 +535,11 @@
       ],
       "colours": [
         "black"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.47,
+        "url": "https://vacuumwars.com/compare/ecovacs/ecovacs_deebot_x9_pro_omni/"
+      }
     },
     {
       "id": "ecovacs-t90-pro-omni",
@@ -503,7 +570,11 @@
       "colours": [
         "black",
         "white"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.96,
+        "url": "https://vacuumwars.com/compare/ecovacs/ecovacs_t90_pro_omni/"
+      }
     },
     {
       "id": "ecovacs-t30-omni",
@@ -649,7 +720,11 @@
       ],
       "colours": [
         "black"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 2.2,
+        "url": "https://vacuumwars.com/complete-eufy-c20-robot-vacuum-review-the-pros-and-cons/"
+      }
     },
     {
       "id": "dreame-l40-ultra-ve",
@@ -708,7 +783,11 @@
       ],
       "colours": [
         "black"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.86,
+        "url": "https://vacuumwars.com/eufy-e28-omni-review-what-you-need-to-know/"
+      }
     },
     {
       "id": "narwal-flow-2",
@@ -741,7 +820,11 @@
       "sources": [
         "https://au.narwal.com/products/narwal-flow-2-robot-vacuum-mop-flow-series",
         "https://us.narwal.com/products/flow-2-robot-vacuum-and-mop"
-      ]
+      ],
+      "vacuumWars": {
+        "stars": 3.86,
+        "url": "https://vacuumwars.com/narwal-flow-2-review/"
+      }
     }
   ]
 }
