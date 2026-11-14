@@ -90,6 +90,36 @@
       ]
     },
     {
+      "id": "roborock-qrevo-edge-3-pro",
+      "brand": "Roborock",
+      "model": "Qrevo Edge 3 Pro",
+      "robot": {
+        "diameter": 352,
+        "height": 79.8
+      },
+      "dock": {
+        "width": 402,
+        "depth": 494,
+        "height": 450,
+        "type": "Self-empty + mop wash",
+        "towerDepth": 300
+      },
+      "robotOnDock": true,
+      "colours": [
+        "black",
+        "white"
+      ],
+      "notes": "2026 model (sold as the Saros 20 Neo in some markets), retractable LiDAR, 36,000 Pa. Roborock quotes 402 x 494 x 450 mm for the robot and dock together. Tower depth ~300 mm without the ramp is an estimate.",
+      "price": {
+        "rrp": 2799,
+        "source": "https://eftm.com/2026/09/roborock-hgit-the-ground-running-at-ifa-2026-with-a-suite-of-new-robotic-cleaning-products-279876/amp"
+      },
+      "sources": [
+        "https://us.roborock.com/products/roborock-qrevo-edge-3-pro-robot-vacuum",
+        "https://eftm.com/2026/10/qrevo-edge-3-pro-review-flagship-cleaning-upgrades-to-36000pa-suction-and-hot-water-sanitising-281617"
+      ]
+    },
+    {
       "id": "roborock-qrevo-slim",
       "brand": "Roborock",
       "model": "Qrevo Slim",
