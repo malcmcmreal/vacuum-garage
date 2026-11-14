@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js?v=7';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=8';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -33,6 +33,16 @@ let state = { ...DEFAULTS };
 const inputs = {};
 const $ = (id) => document.getElementById(id);
 const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
+
+// ---------- Price ----------
+const aud = (n) => '$' + n.toLocaleString('en-AU');
+function priceText(p) {
+  if (!p || (!p.rrp && !p.seen)) return p?.note ? '–' : '–';
+  const parts = [];
+  if (p.rrp) parts.push(`RRP ${aud(p.rrp)}`);
+  if (p.seen) parts.push(`seen ${aud(p.seen)}`);
+  return parts.join(' · ');
+}
 
 // ---------- Controls ----------
 function buildControls() {
@@ -109,6 +119,14 @@ function syncInputs() {
   const notes = $('modelNotes');
   notes.replaceChildren();
   if (m) {
+    const pt = priceText(m.price);
+    const pLine = document.createElement('strong');
+    pLine.textContent = (pt !== '–' ? `${pt} (AUD)` : 'Price: ') + (m.price?.note ? ` – ${m.price.note}` : '');
+    if (m.price?.source) {
+      const pa = Object.assign(document.createElement('a'), { href: m.price.source, target: '_blank', rel: 'noopener', textContent: ' [price]' });
+      pLine.append(pa);
+    }
+    notes.append(pLine, document.createElement('br'));
     notes.append(document.createTextNode(`${m.dock.type}. ${m.notes || ''} `));
     m.sources.forEach((url, i) => {
       const a = Object.assign(document.createElement('a'), { href: url, target: '_blank', rel: 'noopener', textContent: `[${i + 1}]` });
@@ -463,12 +481,14 @@ function renderTable() {
       fmt(m.robot.height), fmt(m.robot.diameter),
       `${fmt(m.dock.width)} × ${fmt(m.dock.depth)} × ${fmt(m.dock.height)}`,
       m.dock.type,
+      priceText(m.price),
       r.overall === 'ok' || r.overall === 'info' ? '–' : `${worst.label}: ${worst.detail}`,
     ];
     cells.forEach((html, i) => {
       const td = document.createElement('td');
       if (i === 0) td.innerHTML = html; else td.textContent = html;
-      if (i >= 2 && i <= 4) td.className = 'num';
+      if ((i >= 2 && i <= 4) || i === 6) td.className = 'num';
+      if (i === 6 && m.price?.note) td.title = m.price.note;
       tr.append(td);
     });
     tr.addEventListener('click', () => { loadModel(m.id); window.scrollTo({ top: 0, behavior: 'smooth' }); });

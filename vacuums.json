@@ -1,5 +1,5 @@
 {
-  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. clearance.sides (optional): recommended clear space on each side of the dock, from the manual.",
+  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. clearance.sides (optional): recommended clear space on each side of the dock, from the manual. price (optional): AU dollars – rrp = recommended retail price, seen = a recent sale price found, with source; prices change often.",
   "models": [
     {
       "id": "roborock-saros-10",
@@ -23,6 +23,10 @@
       ],
       "clearance": {
         "sides": 500
+      },
+      "price": {
+        "rrp": 2999,
+        "source": "https://www.aap.com.au/aapreleases/cision20250325ae49345"
       }
     },
     {
@@ -43,7 +47,12 @@
       "notes": "No LiDAR turret (StarSight navigation), so the height is fixed.",
       "sources": [
         "https://www.techradar.com/home/robot-vacuums/roborock-saros-10r-vs-saros-10-robot-vacuum"
-      ]
+      ],
+      "price": {
+        "rrp": 2899,
+        "seen": 1687,
+        "source": "https://www.techradar.com/home/robot-vacuums/after-reviewing-several-robot-vacuums-in-the-last-12-months-this-is-the-model-id-buy-and-its-got-a-significant-price-drop-too"
+      }
     },
     {
       "id": "roborock-qrevo-edge-2",
@@ -63,7 +72,10 @@
       "notes": "Retractable LiDAR.",
       "sources": [
         "https://smarthomecompared.com/robot-vacuums/roborock-qrevo-edge-2"
-      ]
+      ],
+      "price": {
+        "note": "No Australian price found"
+      }
     },
     {
       "id": "roborock-qrevo-slim",
@@ -84,7 +96,10 @@
       "sources": [
         "https://smarthomecompared.com/robot-vacuums/roborock-qrevo-slim",
         "https://us.roborock.com/pages/roborock-qrevo-slim"
-      ]
+      ],
+      "price": {
+        "note": "No Australian price found"
+      }
     },
     {
       "id": "roborock-qrevo-s",
@@ -104,7 +119,10 @@
       "notes": "Fixed LiDAR turret – a typical 'standard height' robot.",
       "sources": [
         "https://global.roborock.com/pages/roborock-qrevo-s"
-      ]
+      ],
+      "price": {
+        "note": "No Australian price found"
+      }
     },
     {
       "id": "roborock-q7-m5",
@@ -124,7 +142,10 @@
       "notes": "Budget model with a small charging-only dock; robot parks in front of the dock.",
       "sources": [
         "https://us.roborock.com/products/roborock-q7-m5"
-      ]
+      ],
+      "price": {
+        "note": "No Australian price found"
+      }
     },
     {
       "id": "roborock-q7-m5-plus",
@@ -144,7 +165,10 @@
       "notes": "Roborock quotes the robot as 325 mm on this page and 353 mm on the M5 page – check before relying on the diameter.",
       "sources": [
         "https://us.roborock.com/products/roborock-q7-m5-plus/insideClient"
-      ]
+      ],
+      "price": {
+        "note": "No Australian price found"
+      }
     },
     {
       "id": "dreame-x50-ultra",
@@ -161,11 +185,16 @@
         "type": "Self-empty + mop wash"
       },
       "robotOnDock": true,
-      "notes": "89 mm is with the VersaLift LiDAR retracted; it is taller with the LiDAR raised. Dreame lists the dock as 457 x 340 x 590 (L x W x H) – width/depth orientation assumed here.",
+      "notes": "89 mm is with the VersaLift LiDAR retracted; it is taller with the LiDAR raised. Dock is 340 W x 457 D x 590 H (same dock family as the L40).",
       "sources": [
         "https://global.dreametech.com/products/x50-ultra",
         "https://smarthomecompared.com/robot-vacuums/dreame-x50-ultra"
-      ]
+      ],
+      "price": {
+        "rrp": 2999,
+        "note": "Discontinued, replaced by X60 Ultra",
+        "source": "https://www.channelnews.com.au/dreame-technology-launches-x50-ultra-with-worlds-first-robotic-retractable-legs/"
+      }
     },
     {
       "id": "ecovacs-x8-pro-omni",
@@ -186,7 +215,12 @@
       "notes": "Dock depth includes the base/ramp (294 mm without it).",
       "sources": [
         "https://the-gadgeteer.com/2025/03/29/ecovacs-deebot-x8-pro-omni-robot-vac-mop-review-edging-closer-to-the-perfect-vac-mop/"
-      ]
+      ],
+      "price": {
+        "rrp": 2499,
+        "seen": 1378,
+        "source": "https://www.techradar.com/home/robot-vacuums/this-top-tier-robovac-is-back-to-its-black-friday-price-get-the-ecovacs-deebot-x8-pro-omni-for-a-massive-45-percent-off"
+      }
     },
     {
       "id": "ecovacs-t50-pro-omni",
@@ -213,6 +247,11 @@
       ],
       "clearance": {
         "sides": 500
+      },
+      "price": {
+        "rrp": 1499,
+        "seen": 749,
+        "source": "https://itbrief.com.au/story/ecovacs-extends-sale-with-flagship-robot-cleaner-added"
       }
     },
     {
@@ -238,6 +277,288 @@
       "sources": [
         "https://www.ecovacs.com/us/deebot-robotic-vacuum-cleaner/bundle-deebot-t50-max-winbot-w2-pro-omni",
         "https://cybershack.com.au/cleaning/ecovacs-deebot-t50-pro-omni-and-t50-max-pro-omni-first-look/"
+      ],
+      "price": {
+        "rrp": 1799,
+        "seen": 1579,
+        "source": "https://www.ozbargain.com.au/node/910729"
+      }
+    },
+    {
+      "id": "ecovacs-t80-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot T80 Omni",
+      "robot": {
+        "diameter": 353,
+        "height": 98
+      },
+      "dock": {
+        "width": 338,
+        "depth": 459,
+        "height": 500,
+        "type": "Self-empty + roller-mop wash",
+        "towerDepth": 276
+      },
+      "robotOnDock": true,
+      "clearance": {
+        "sides": 500
+      },
+      "notes": "OZMO roller mop. Compact 338 mm wide station; tower 276 mm deep without the base.",
+      "price": {
+        "rrp": 2299,
+        "seen": 699,
+        "source": "https://www.ozbargain.com.au/node/967484"
+      },
+      "sources": [
+        "https://www.ecovacs.com/ca/deebot-robotic-vacuum-cleaner/bundle-deebot-t80-omni-winbot-mini",
+        "https://eftm.com/2026/04/ecovacs-launches-deebot-x8-max-pro-and-t80-omni-robot-cleaners-with-some-great-intro-deals-274822"
+      ]
+    },
+    {
+      "id": "ecovacs-t80s-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot T80S Omni",
+      "robot": {
+        "diameter": 353,
+        "height": 98
+      },
+      "dock": {
+        "width": 338,
+        "depth": 459,
+        "height": 500,
+        "type": "Self-empty + roller-mop wash",
+        "towerDepth": 276
+      },
+      "robotOnDock": true,
+      "clearance": {
+        "sides": 500
+      },
+      "notes": "Updated T80 (24,800 Pa, OZMO Roller 2.0). Same station size as the T80.",
+      "price": {
+        "rrp": 1799,
+        "seen": 1199,
+        "source": "https://itbrief.com.au/story/ecovacs-extends-sale-with-flagship-robot-cleaner-added"
+      },
+      "sources": [
+        "https://www.ecovacs.com/us/shop/deebot-robotic-vacuum-cleaner/deebot-t80s-omni",
+        "https://www.digitalreviews.net/news/pressers/ecovacs-deebot-t80s-omni-australia-launch-price-specs/"
+      ]
+    },
+    {
+      "id": "ecovacs-x9-pro-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot X9 Pro Omni",
+      "robot": {
+        "diameter": 353,
+        "height": 98
+      },
+      "dock": {
+        "width": 338,
+        "depth": 459,
+        "height": 500,
+        "type": "Self-empty + roller-mop wash",
+        "towerDepth": 276
+      },
+      "robotOnDock": true,
+      "clearance": {
+        "sides": 500
+      },
+      "notes": "Roller mop flagship (2025). Same compact station footprint as the T80.",
+      "price": {
+        "note": "US RRP US$1,599; Australian availability not confirmed"
+      },
+      "sources": [
+        "https://www.ecovacs.com/us/deebot-robotic-vacuum-cleaner/bundle-deebot-x9-pro-omni-winbot-w2-pro-omni"
+      ]
+    },
+    {
+      "id": "ecovacs-t90-pro-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot T90 Pro Omni",
+      "robot": {
+        "diameter": 353,
+        "height": 95
+      },
+      "dock": {
+        "width": 338,
+        "depth": 460,
+        "height": 500,
+        "type": "Self-empty + roller-mop wash"
+      },
+      "robotOnDock": true,
+      "clearance": {
+        "sides": 500
+      },
+      "notes": "2026 model, 30,000 Pa. Station is the same size as the T80/X9, so the tower is probably ~276 mm deep, but that isn't confirmed – set the tower depth slider to check.",
+      "price": {
+        "rrp": 2299,
+        "seen": 1190,
+        "source": "https://www.ozbargain.com.au/brand/ecovacs"
+      },
+      "sources": [
+        "https://smarthomecompared.com/robot-vacuums/ecovacs-deebot-t90-omni",
+        "https://www.channelnews.com.au/ecovacs-launches-new-deebot-robot-vacuum-range-with-advanced-roller-mopping-technology/"
+      ]
+    },
+    {
+      "id": "ecovacs-t30-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot T30 Omni",
+      "robot": {
+        "diameter": 353,
+        "height": 99
+      },
+      "dock": {
+        "width": 409,
+        "depth": 490,
+        "height": 480,
+        "type": "Self-empty + mop wash"
+      },
+      "robotOnDock": true,
+      "clearance": {
+        "sides": 500
+      },
+      "notes": "'Mini OMNI' station. Tower depth without the ramp isn't published.",
+      "price": {
+        "rrp": 1749,
+        "seen": 799,
+        "source": "https://cybershack.com.au/announcements/deebot-t30-omni/"
+      },
+      "sources": [
+        "https://www.ecovacs.com/uk/shop/deebot-robotic-vacuum-cleaner/deebot-t30-omni"
+      ]
+    },
+    {
+      "id": "ecovacs-t30-pro-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot T30 Pro Omni",
+      "robot": {
+        "diameter": 353,
+        "height": 104
+      },
+      "dock": {
+        "width": 409,
+        "depth": 490,
+        "height": 480,
+        "type": "Self-empty + mop wash"
+      },
+      "robotOnDock": true,
+      "clearance": {
+        "sides": 500
+      },
+      "notes": "Same station as the T30 Omni but a taller 104 mm robot. Tower depth isn't published.",
+      "price": {
+        "rrp": 1799,
+        "seen": 1399,
+        "source": "https://www.techradar.com/home/robot-vacuums/the-ecovacs-deebot-t30-omni-robot-vacuum-has-won-me-over-after-one-use-a-limited-time-20-saving-has-me-sold"
+      },
+      "sources": [
+        "https://www.ecovacs.com/dk/deebot-t30-family"
+      ]
+    },
+    {
+      "id": "ecovacs-n30-pro-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot N30 Pro Omni",
+      "robot": {
+        "diameter": 353,
+        "height": 104
+      },
+      "dock": {
+        "width": 340,
+        "depth": 485,
+        "height": 540,
+        "type": "Self-empty + mop wash"
+      },
+      "robotOnDock": true,
+      "clearance": {
+        "sides": 500
+      },
+      "notes": "Budget Omni, JB Hi-Fi exclusive in Australia. Tower depth without the base isn't published.",
+      "price": {
+        "rrp": 1899,
+        "seen": 798,
+        "source": "https://www.tomsguide.com/au/home/home-appliances/looking-to-pick-up-a-robot-vacuum-this-black-friday-as-a-robovac-reviewer-these-three-ecovacs-deals-have-my-stamp-of-approval"
+      },
+      "sources": [
+        "https://livestainable.co.za/products/ecovacs-deebot-n30-pro-smart-robot-vacuum-10-000pa-suction-zerotangle-2-0-black"
+      ]
+    },
+    {
+      "id": "ecovacs-deebot-mini",
+      "brand": "Ecovacs",
+      "model": "Deebot Mini",
+      "robot": {
+        "diameter": 286,
+        "height": 100
+      },
+      "dock": {
+        "width": 320,
+        "depth": 385,
+        "height": 400,
+        "type": "Self-empty + mop wash (mini)"
+      },
+      "robotOnDock": true,
+      "clearance": {
+        "sides": 500
+      },
+      "notes": "Small 286 mm robot with a tiny Omni station. Station height is quoted as 385–400 mm by different sources; depth 385 mm is from one retailer.",
+      "price": {
+        "note": "EU RRP €499; Australian availability not confirmed"
+      },
+      "sources": [
+        "https://www.ecovacs.com/sg/deebot-robotic-vacuum-cleaner/deebot-mini-blue",
+        "https://www.galaxus.ch/en/s2/product/ecovacs-mini-vacuum-mopping-robot-robot-vacuum-cleaners-59687442"
+      ]
+    },
+    {
+      "id": "eufy-omni-c20",
+      "brand": "Eufy",
+      "model": "Omni C20",
+      "robot": {
+        "diameter": 334,
+        "height": 85
+      },
+      "dock": {
+        "width": 330,
+        "depth": 289,
+        "height": 460,
+        "type": "Self-empty + mop wash"
+      },
+      "robotOnDock": false,
+      "notes": "Very compact station. Exactly where the robot sits when docked isn't published; 'parks in front' is a conservative assumption, so the overhang shown may be larger than reality. Eufy advises against putting the station inside a closed wardrobe because of moisture.",
+      "price": {
+        "seen": 799,
+        "source": "https://www.digitalreviews.net/reviews/lifestyle/eufy-omni-c20-robot-vacuum-review/"
+      },
+      "sources": [
+        "https://service.anker.com/article-description/Dimensions-of-the-C20-Omni-and-the-All-in-One-Station"
+      ]
+    },
+    {
+      "id": "dreame-l40-ultra-ve",
+      "brand": "Dreame",
+      "model": "L40 Ultra VE",
+      "robot": {
+        "diameter": 350,
+        "height": 97
+      },
+      "dock": {
+        "width": 340,
+        "depth": 457,
+        "height": 590,
+        "type": "Self-empty + mop wash"
+      },
+      "robotOnDock": true,
+      "notes": "Tall 590 mm dock. Tower depth without the ramp isn't published.",
+      "price": {
+        "rrp": 1799,
+        "seen": 897,
+        "source": "https://jbhifi.com.au/products/dreame-l40-ultra-ve-robot-vacuum-cleaner"
+      },
+      "sources": [
+        "https://dreame.com.au/products/dreame-l40-ultra-ve",
+        "https://www.thegoodguys.com.au/dreame-l40-ultra-ve-robot-vacuum-r2579g"
       ]
     }
   ]
