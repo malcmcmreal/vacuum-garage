@@ -389,13 +389,14 @@
         "width": 338,
         "depth": 460,
         "height": 500,
-        "type": "Self-empty + roller-mop wash"
+        "type": "Self-empty + roller-mop wash",
+        "towerDepth": 275
       },
       "robotOnDock": true,
       "clearance": {
         "sides": 500
       },
-      "notes": "2026 model, 30,000 Pa. Station is the same size as the T80/X9, so the tower is probably ~276 mm deep, but that isn't confirmed – set the tower depth slider to check.",
+      "notes": "2026 model, 30,000 Pa. Tower depth ~275 mm without the ramp is an estimate.",
       "price": {
         "rrp": 2299,
         "seen": 1190,
@@ -418,13 +419,14 @@
         "width": 409,
         "depth": 490,
         "height": 480,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 275
       },
       "robotOnDock": true,
       "clearance": {
         "sides": 500
       },
-      "notes": "'Mini OMNI' station. Tower depth without the ramp isn't published.",
+      "notes": "'Mini OMNI' station. Tower depth ~275 mm without the ramp is an estimate.",
       "price": {
         "rrp": 1749,
         "seen": 799,
@@ -446,13 +448,14 @@
         "width": 409,
         "depth": 490,
         "height": 480,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 275
       },
       "robotOnDock": true,
       "clearance": {
         "sides": 500
       },
-      "notes": "Same station as the T30 Omni but a taller 104 mm robot. Tower depth isn't published.",
+      "notes": "Same station as the T30 Omni but a taller 104 mm robot. Tower depth ~275 mm without the ramp is an estimate.",
       "price": {
         "rrp": 1799,
         "seen": 1399,
@@ -474,13 +477,14 @@
         "width": 340,
         "depth": 485,
         "height": 540,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 275
       },
       "robotOnDock": true,
       "clearance": {
         "sides": 500
       },
-      "notes": "Budget Omni, JB Hi-Fi exclusive in Australia. Tower depth without the base isn't published.",
+      "notes": "Budget Omni, JB Hi-Fi exclusive in Australia. Tower depth ~275 mm without the ramp is an estimate.",
       "price": {
         "rrp": 1899,
         "seen": 798,
