@@ -20,7 +20,7 @@ export function evaluate(p) {
   if (isNum(p.robotH)) {
     const c = p.gapH - p.robotH;
     if (c < 0) add('height', 'Robot under door', 'fail', `Robot is ${mm(-c)} too tall for the ${mm(p.gapH)} gap.`);
-    else if (c < p.heightMargin) add('height', 'Robot under door', 'warn', `Only ${mm(c)} clearance – less than your ${mm(p.heightMargin)} margin.`);
+    else if (c < p.heightMargin) add('height', 'Robot under door', 'warn', `Only ${mm(c)} between robot and door – less than ${mm(p.heightMargin)}.`);
     else add('height', 'Robot under door', 'ok', `${mm(c)} clearance under the door.`);
   } else add('height', 'Robot under door', 'unknown', 'Robot height unknown.');
 
