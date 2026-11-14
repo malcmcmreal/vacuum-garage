@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js?v=11';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=12';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -44,6 +44,28 @@ function priceText(p) {
   return parts.join(' · ');
 }
 
+// ---------- Colour ----------
+const SWATCH = { black: '#1f2328', grey: '#8a8f96', white: '#f7f7f5', blue: '#7aa7d6', green: '#86b98a', rose: '#e3b5b5' };
+const DARK = new Set(['black', 'grey']);
+function swatches(cols) {
+  const span = document.createElement('span');
+  span.className = 'swatches';
+  if (!cols || !cols.length) { span.textContent = '?'; span.title = 'Colour not checked'; return span; }
+  for (const c of cols) {
+    const dot = document.createElement('span');
+    dot.className = 'swatch';
+    dot.style.background = SWATCH[c] || '#ccc';
+    dot.title = c;
+    span.append(dot);
+  }
+  const label = document.createElement('span');
+  label.className = 'swatch-label';
+  label.textContent = cols.join(' / ');
+  span.append(label);
+  return span;
+}
+const hasDark = (m) => (m.colours || []).some((c) => DARK.has(c));
+
 // ---------- Controls ----------
 function buildControls() {
   for (const p of PARAMS) {
@@ -77,6 +99,7 @@ function buildControls() {
   });
   $('showDoor').addEventListener('change', update);
   $('resetCam').addEventListener('click', resetCamera);
+  $('darkOnly').addEventListener('change', renderTable);
 }
 
 function flash(btn, text) {
@@ -127,6 +150,10 @@ function syncInputs() {
       pLine.append(pa);
     }
     notes.append(pLine, document.createElement('br'));
+    const cLine = document.createElement('span');
+    cLine.append('Colour: ', swatches(m.colours));
+    if (m.colourNote) cLine.append(` (${m.colourNote})`);
+    notes.append(cLine, document.createElement('br'));
     notes.append(document.createTextNode(`${m.dock.type}. ${m.notes || ''} `));
     m.sources.forEach((url, i) => {
       const a = Object.assign(document.createElement('a'), { href: url, target: '_blank', rel: 'noopener', textContent: `[${i + 1}]` });
@@ -468,7 +495,8 @@ function renderChecks(result) {
 
 function renderTable() {
   const tbody = $('modelTable').querySelector('tbody');
-  const rows = models.map((m) => {
+  const darkOnly = $('darkOnly').checked;
+  const rows = models.filter((m) => !darkOnly || hasDark(m)).map((m) => {
     const r = evaluate(paramsForModel(modelBase(), m));
     const worst = r.checks.reduce((a, c) => (RANK[c.status] > RANK[a.status] ? c : a), r.checks[0]);
     return { m, r, worst };
@@ -480,6 +508,7 @@ function renderTable() {
     const cells = [
       `<span class="badge ${r.overall}">${BADGE[r.overall]}</span>`,
       `${m.brand} ${m.model}`,
+      null,
       fmt(m.robot.height), fmt(m.robot.diameter),
       `${fmt(m.dock.width)} × ${fmt(m.dock.depth)} × ${fmt(m.dock.height)}`,
       m.dock.type,
@@ -488,9 +517,11 @@ function renderTable() {
     ];
     cells.forEach((html, i) => {
       const td = document.createElement('td');
-      if (i === 0) td.innerHTML = html; else td.textContent = html;
-      if ((i >= 2 && i <= 4) || i === 6) td.className = 'num';
-      if (i === 6 && m.price?.note) td.title = m.price.note;
+      if (i === 0) td.innerHTML = html;
+      else if (i === 2) td.append(swatches(m.colours));
+      else td.textContent = html;
+      if ((i >= 3 && i <= 5) || i === 7) td.className = 'num';
+      if (i === 7 && m.price?.note) td.title = m.price.note;
       tr.append(td);
     });
     tr.addEventListener('click', () => { loadModel(m.id); window.scrollTo({ top: 0, behavior: 'smooth' }); });

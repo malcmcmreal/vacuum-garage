@@ -1,5 +1,5 @@
 {
-  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. price (optional): AU dollars – rrp = recommended retail price, seen = a recent sale price found, with source; prices change often.",
+  "_notes": "All dimensions in mm. robot: diameter (largest footprint dimension) and height (tallest point in normal use). dock: width x depth x height, including any ramp/base plate. robotOnDock: true if the robot parks on the dock's ramp inside the dock's depth; false if it parks in front of the dock (simple charging docks). dock.towerDepth (optional): depth of the tall part of the dock without its low ramp/base – the ramp can sit under the door gap. Use null for unknown values. Always check the manufacturer's current spec sheet before buying. price (optional): AU dollars – rrp = recommended retail price, seen = a recent sale price found, with source; prices change often. colours: robot colours found for sale (empty = not checked).",
   "models": [
     {
       "id": "roborock-saros-10",
@@ -25,7 +25,12 @@
       "price": {
         "rrp": 2999,
         "source": "https://www.aap.com.au/aapreleases/cision20250325ae49345"
-      }
+      },
+      "colours": [
+        "black",
+        "white"
+      ],
+      "colourNote": "Australian stock is black; white sold overseas."
     },
     {
       "id": "roborock-saros-10r",
@@ -51,7 +56,10 @@
         "rrp": 2899,
         "seen": 1687,
         "source": "https://www.techradar.com/home/robot-vacuums/after-reviewing-several-robot-vacuums-in-the-last-12-months-this-is-the-model-id-buy-and-its-got-a-significant-price-drop-too"
-      }
+      },
+      "colours": [
+        "black"
+      ]
     },
     {
       "id": "roborock-qrevo-edge-2",
@@ -75,7 +83,12 @@
       ],
       "price": {
         "note": "No Australian price found"
-      }
+      },
+      "colours": [
+        "black",
+        "white"
+      ],
+      "colourNote": "Australian Roborock store lists black only."
     },
     {
       "id": "roborock-qrevo-slim",
@@ -100,7 +113,10 @@
       ],
       "price": {
         "note": "No Australian price found"
-      }
+      },
+      "colours": [
+        "black"
+      ]
     },
     {
       "id": "roborock-qrevo-s",
@@ -124,7 +140,8 @@
       ],
       "price": {
         "note": "No Australian price found"
-      }
+      },
+      "colours": []
     },
     {
       "id": "roborock-q7-m5",
@@ -147,7 +164,8 @@
       ],
       "price": {
         "note": "No Australian price found"
-      }
+      },
+      "colours": []
     },
     {
       "id": "roborock-q7-m5-plus",
@@ -170,7 +188,8 @@
       ],
       "price": {
         "note": "No Australian price found"
-      }
+      },
+      "colours": []
     },
     {
       "id": "dreame-x50-ultra",
@@ -197,7 +216,11 @@
         "rrp": 2999,
         "note": "Discontinued, replaced by X60 Ultra",
         "source": "https://www.channelnews.com.au/dreame-technology-launches-x50-ultra-with-worlds-first-robotic-retractable-legs/"
-      }
+      },
+      "colours": [
+        "black",
+        "white"
+      ]
     },
     {
       "id": "ecovacs-x8-pro-omni",
@@ -223,7 +246,10 @@
         "rrp": 2499,
         "seen": 1378,
         "source": "https://www.techradar.com/home/robot-vacuums/this-top-tier-robovac-is-back-to-its-black-friday-price-get-the-ecovacs-deebot-x8-pro-omni-for-a-massive-45-percent-off"
-      }
+      },
+      "colours": [
+        "black"
+      ]
     },
     {
       "id": "ecovacs-t50-pro-omni",
@@ -252,7 +278,11 @@
         "rrp": 1499,
         "seen": 749,
         "source": "https://itbrief.com.au/story/ecovacs-extends-sale-with-flagship-robot-cleaner-added"
-      }
+      },
+      "colours": [
+        "black",
+        "white"
+      ]
     },
     {
       "id": "ecovacs-t50-max-pro-omni",
@@ -279,7 +309,10 @@
         "rrp": 1799,
         "seen": 1579,
         "source": "https://www.ozbargain.com.au/node/910729"
-      }
+      },
+      "colours": [
+        "white"
+      ]
     },
     {
       "id": "ecovacs-t80-omni",
@@ -306,6 +339,10 @@
       "sources": [
         "https://www.ecovacs.com/ca/deebot-robotic-vacuum-cleaner/bundle-deebot-t80-omni-winbot-mini",
         "https://eftm.com/2026/04/ecovacs-launches-deebot-x8-max-pro-and-t80-omni-robot-cleaners-with-some-great-intro-deals-274822"
+      ],
+      "colours": [
+        "black",
+        "white"
       ]
     },
     {
@@ -333,6 +370,9 @@
       "sources": [
         "https://www.ecovacs.com/us/shop/deebot-robotic-vacuum-cleaner/deebot-t80s-omni",
         "https://www.digitalreviews.net/news/pressers/ecovacs-deebot-t80s-omni-australia-launch-price-specs/"
+      ],
+      "colours": [
+        "black"
       ]
     },
     {
@@ -357,6 +397,9 @@
       },
       "sources": [
         "https://www.ecovacs.com/us/deebot-robotic-vacuum-cleaner/bundle-deebot-x9-pro-omni-winbot-w2-pro-omni"
+      ],
+      "colours": [
+        "black"
       ]
     },
     {
@@ -384,6 +427,10 @@
       "sources": [
         "https://smarthomecompared.com/robot-vacuums/ecovacs-deebot-t90-omni",
         "https://www.channelnews.com.au/ecovacs-launches-new-deebot-robot-vacuum-range-with-advanced-roller-mopping-technology/"
+      ],
+      "colours": [
+        "black",
+        "white"
       ]
     },
     {
@@ -410,6 +457,9 @@
       },
       "sources": [
         "https://www.ecovacs.com/uk/shop/deebot-robotic-vacuum-cleaner/deebot-t30-omni"
+      ],
+      "colours": [
+        "black"
       ]
     },
     {
@@ -436,6 +486,10 @@
       },
       "sources": [
         "https://www.ecovacs.com/dk/deebot-t30-family"
+      ],
+      "colours": [
+        "white",
+        "rose"
       ]
     },
     {
@@ -462,6 +516,10 @@
       },
       "sources": [
         "https://livestainable.co.za/products/ecovacs-deebot-n30-pro-smart-robot-vacuum-10-000pa-suction-zerotangle-2-0-black"
+      ],
+      "colours": [
+        "black",
+        "white"
       ]
     },
     {
@@ -486,7 +544,12 @@
       "sources": [
         "https://www.ecovacs.com/sg/deebot-robotic-vacuum-cleaner/deebot-mini-blue",
         "https://www.galaxus.ch/en/s2/product/ecovacs-mini-vacuum-mopping-robot-robot-vacuum-cleaners-59687442"
-      ]
+      ],
+      "colours": [
+        "blue",
+        "green"
+      ],
+      "colourNote": "Two-tone with white."
     },
     {
       "id": "eufy-omni-c20",
@@ -510,6 +573,9 @@
       },
       "sources": [
         "https://service.anker.com/article-description/Dimensions-of-the-C20-Omni-and-the-All-in-One-Station"
+      ],
+      "colours": [
+        "black"
       ]
     },
     {
@@ -537,6 +603,9 @@
       "sources": [
         "https://dreame.com.au/products/dreame-l40-ultra-ve",
         "https://www.thegoodguys.com.au/dreame-l40-ultra-ve-robot-vacuum-r2579g"
+      ],
+      "colours": [
+        "white"
       ]
     },
     {
@@ -563,6 +632,9 @@
       "sources": [
         "https://support.au.eufy.com/support/solutions/articles/154000240698-what-are-the-dimensions-of-the-e28-robot-and-its-base-station",
         "https://au.eufy.com/products/t2352t11"
+      ],
+      "colours": [
+        "black"
       ]
     }
   ]
