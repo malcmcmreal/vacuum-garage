@@ -206,6 +206,7 @@
       "robotOnDock": true,
       "notes": "Embedded dToF LiDAR (no turret). Dock depth includes the base/ramp (294 mm without it).",
       "sources": [
+        "https://www.ecovacs.com/us/deebot-robotic-vacuum-cleaner/deebot-t50-pro-omni",
         "https://www.ecovacs.com/uk/deebot-robotic-vacuum-cleaner/deebot-t50-pro-omni",
         "https://www.robotspecialist.com.au/products/ecovacs-deebot-t50-pro-omni-vacuum-cleaner",
         "https://manuals.plus/asin/B0DRVB4DVC.pdf"
@@ -213,6 +214,31 @@
       "clearance": {
         "sides": 500
       }
+    },
+    {
+      "id": "ecovacs-t50-max-pro-omni",
+      "brand": "Ecovacs",
+      "model": "Deebot T50 Max Pro Omni",
+      "robot": {
+        "diameter": 353,
+        "height": 98
+      },
+      "dock": {
+        "width": 350,
+        "depth": 477,
+        "height": 533,
+        "type": "Self-empty + mop wash",
+        "towerDepth": 294
+      },
+      "robotOnDock": true,
+      "clearance": {
+        "sides": 500
+      },
+      "notes": "Same OMNI station as the T50 Pro Omni, but a taller 98 mm robot (some retailers wrongly list 81 mm). Side clearance taken from the T50 family guidance.",
+      "sources": [
+        "https://www.ecovacs.com/us/deebot-robotic-vacuum-cleaner/bundle-deebot-t50-max-winbot-w2-pro-omni",
+        "https://cybershack.com.au/cleaning/ecovacs-deebot-t50-pro-omni-and-t50-max-pro-omni-first-look/"
+      ]
     }
   ]
 }
