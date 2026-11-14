@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js?v=10';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=11';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -70,7 +70,7 @@ function buildControls() {
     update();
   });
   $('modelSelect').addEventListener('change', (e) => loadModel(e.target.value));
-  $('reset').addEventListener('click', () => { state = { ...DEFAULTS }; update(); resetCamera(); });
+  $('reset').addEventListener('click', () => { state = { ...DEFAULTS }; loadModel(DEFAULT_MODEL); resetCamera(); });
   $('copyLink').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(location.href); flash($('copyLink'), 'Copied!'); }
     catch { flash($('copyLink'), 'Copy failed'); }
@@ -150,9 +150,11 @@ function writeURL() {
   history.replaceState(null, '', s ? `?${s}` : location.pathname);
 }
 
+const DEFAULT_MODEL = 'ecovacs-t50-pro-omni';
 function readURL() {
   const q = new URLSearchParams(location.search);
-  const id = q.get('m');
+  const custom = MODEL_KEYS.some((k) => q.has(k)) || q.has('front');
+  const id = q.get('m') || (custom ? null : DEFAULT_MODEL);
   const m = models.find((x) => x.id === id);
   if (m) state = { ...paramsForModel(modelBase(), m), modelId: id };
   for (const p of PARAMS) {
