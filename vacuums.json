@@ -538,6 +538,32 @@
         "https://dreame.com.au/products/dreame-l40-ultra-ve",
         "https://www.thegoodguys.com.au/dreame-l40-ultra-ve-robot-vacuum-r2579g"
       ]
+    },
+    {
+      "id": "eufy-omni-e28",
+      "brand": "Eufy",
+      "model": "Omni E28",
+      "robot": {
+        "diameter": 352,
+        "height": 111.3
+      },
+      "dock": {
+        "width": 373,
+        "depth": 484,
+        "height": 464,
+        "type": "Self-empty + roller-mop wash + portable spot cleaner"
+      },
+      "robotOnDock": true,
+      "notes": "Square-ish robot (352 x 326 mm) with a roller mop; the station includes a lift-off portable deep cleaner. Eufy lists the station as 372.86 x 484.06 x 464.26 mm (L x W x H) – width/depth orientation assumed. Tower depth without the ramp isn't published.",
+      "price": {
+        "rrp": 1999,
+        "seen": 746,
+        "source": "https://www.ozbargain.com.au/node/949700"
+      },
+      "sources": [
+        "https://support.au.eufy.com/support/solutions/articles/154000240698-what-are-the-dimensions-of-the-e28-robot-and-its-base-station",
+        "https://au.eufy.com/products/t2352t11"
+      ]
     }
   ]
 }
