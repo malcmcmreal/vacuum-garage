@@ -29,8 +29,7 @@
       "colours": [
         "black",
         "white"
-      ],
-      "colourNote": "Australian stock is black; white sold overseas."
+      ]
     },
     {
       "id": "roborock-saros-10r",
@@ -58,7 +57,8 @@
         "source": "https://www.techradar.com/home/robot-vacuums/after-reviewing-several-robot-vacuums-in-the-last-12-months-this-is-the-model-id-buy-and-its-got-a-significant-price-drop-too"
       },
       "colours": [
-        "black"
+        "black",
+        "white"
       ]
     },
     {
@@ -87,8 +87,7 @@
       "colours": [
         "black",
         "white"
-      ],
-      "colourNote": "Australian Roborock store lists black only."
+      ]
     },
     {
       "id": "roborock-qrevo-slim",
@@ -115,7 +114,8 @@
         "note": "No Australian price found"
       },
       "colours": [
-        "black"
+        "black",
+        "white"
       ]
     },
     {
@@ -141,7 +141,10 @@
       "price": {
         "note": "No Australian price found"
       },
-      "colours": []
+      "colours": [
+        "black",
+        "white"
+      ]
     },
     {
       "id": "roborock-q7-m5",
@@ -165,7 +168,10 @@
       "price": {
         "note": "No Australian price found"
       },
-      "colours": []
+      "colours": [
+        "black",
+        "white"
+      ]
     },
     {
       "id": "roborock-q7-m5-plus",
@@ -189,7 +195,10 @@
       "price": {
         "note": "No Australian price found"
       },
-      "colours": []
+      "colours": [
+        "black",
+        "white"
+      ]
     },
     {
       "id": "dreame-x50-ultra",
