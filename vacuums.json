@@ -727,6 +727,42 @@
       }
     },
     {
+      "id": "eufy-omni-c28",
+      "brand": "Eufy",
+      "model": "Omni C28",
+      "robot": {
+        "diameter": 348,
+        "height": 110.5
+      },
+      "dock": {
+        "width": 353,
+        "depth": 437,
+        "height": 430,
+        "type": "Self-empty + roller-mop wash"
+      },
+      "robotOnDock": true,
+      "colours": [
+        "black",
+        "white"
+      ],
+      "notes": "Squircle robot, 327 x 348 x 110.5 mm (4.35 in, fixed LiDAR turret). Station 17.20 x 13.88 x 16.93 in (437 x 353 x 430 mm) – depth/width orientation assumed. Tower depth without the ramp isn't published.",
+      "price": {
+        "rrp": 1499.95,
+        "seen": 749.5,
+        "source": "https://www.ozbargain.com.au/node/967451"
+      },
+      "vacuumWars": {
+        "stars": 3.92,
+        "url": "https://vacuumwars.com/best-monthly-2026-robot-vacuums/",
+        "note": "Vacuum Wars Score from its August 2026 Best Budget pick"
+      },
+      "sources": [
+        "https://www.eufy.com/products/bundle-t211a110-1-t291var0-1",
+        "https://www.notebookcheck.net/eufy-Omni-C28-robot-vacuum-review-Capable-mid-range-robot-vacuum-without-any-gimmicks.1301769.0.html",
+        "https://au.eufy.com/products/eufy-robot-vacuum-omni-c28"
+      ]
+    },
+    {
       "id": "dreame-l40-ultra-ve",
       "brand": "Dreame",
       "model": "L40 Ultra VE",
