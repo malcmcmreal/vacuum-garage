@@ -108,3 +108,11 @@ td.num { font-variant-numeric: tabular-nums; }
 .badge.fail { background: var(--fail); }
 
 footer { padding: 0.5rem 1.5rem 2rem; color: var(--muted); font-size: 0.85rem; }
+
+.spaces { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.6rem; }
+.space-tile { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0.6rem 0.75rem; }
+.space-num { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+.space-num span { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+.space-label { font-size: 0.88rem; font-weight: 600; margin-top: 0.1rem; }
+.space-sub { font-size: 0.78rem; color: var(--muted); }
+.space-tile.neg .space-num { color: var(--fail); }

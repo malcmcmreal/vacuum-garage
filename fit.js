@@ -73,7 +73,14 @@ export function evaluate(p) {
     const st = c.status === 'info' ? 'ok' : c.status;
     return RANK[st] > RANK[w] ? st : w;
   }, 'ok');
-  return { checks, overall, geometry: { parkedDepth } };
+  const spaces = {
+    aboveDock: isNum(p.dockH) ? p.cupH - p.dockH : null,
+    dockSides: isNum(p.dockW) ? (p.cupW - p.dockW) / 2 : null,
+    aboveRobot: isNum(p.robotH) ? p.gapH - p.robotH : null,
+    toDoor: isNum(parkedDepth) ? p.cupD - parkedDepth : null,
+    opening: isNum(p.robotDia) ? p.openW - p.robotDia : null,
+  };
+  return { checks, overall, geometry: { parkedDepth }, spaces };
 }
 
 /** Merge cupboard/clearance params with a model's dimensions. */

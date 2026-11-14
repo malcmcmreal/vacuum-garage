@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { evaluate, paramsForModel, RANK } from './fit.js?v=6';
+import { evaluate, paramsForModel, RANK } from './fit.js?v=7';
 
 // ---------- Parameters ----------
 const PARAMS = [
@@ -283,6 +283,21 @@ function text(parent, x, y, str, size, opts = {}) {
   t.textContent = str;
   return t;
 }
+function dim(parent, x1, y1, x2, y2, label, size, opts = {}) {
+  const c = opts.color || '#2f6fb0';
+  const vertical = Math.abs(x2 - x1) < Math.abs(y2 - y1);
+  const tick = size * 0.35;
+  el('line', { x1, y1, x2, y2, ...stroke(c, 1.2) }, parent);
+  if (vertical) {
+    el('line', { x1: x1 - tick, y1, x2: x1 + tick, y2: y1, ...stroke(c, 1.2) }, parent);
+    el('line', { x1: x2 - tick, y1: y2, x2: x2 + tick, y2, ...stroke(c, 1.2) }, parent);
+    text(parent, x1 + tick + 4, (y1 + y2) / 2, label, size, { anchor: 'start', fill: c });
+  } else {
+    el('line', { x1, y1: y1 - tick, x2: x1, y2: y1 + tick, ...stroke(c, 1.2) }, parent);
+    el('line', { x1: x2, y1: y2 - tick, x2, y2: y2 + tick, ...stroke(c, 1.2) }, parent);
+    text(parent, (x1 + x2) / 2, y1 - size * 0.8, label, size, { fill: c });
+  }
+}
 const stroke = (c, w = 1.5, extra = {}) => ({ stroke: c, 'stroke-width': w, 'vector-effect': 'non-scaling-stroke', ...extra });
 
 function outsideExtent(s) {
@@ -321,6 +336,12 @@ function renderTop(svg, result) {
     if (dD > tD) el('rect', { x: -dW / 2, y: tD, width: dW, height: dD - tD, fill: '#5a6068', 'fill-opacity': 0.35, ...stroke('#22262a', 1, { 'stroke-dasharray': '5 4' }) }, svg);
     el('rect', { x: -dW / 2, y: 0, width: dW, height: tD, fill: known ? '#3a4048' : '#9a9ea4', 'fill-opacity': known ? 0.75 : 0.4, rx: 6, ...stroke('#22262a') }, svg);
     text(svg, 0, Math.min(tD / 2, 60), 'dock', fs * 0.8, { fill: '#fff' });
+    const side = (W - dW) / 2;
+    if (side > 0) {
+      const yy = Math.min(tD * 0.35, 140);
+      dim(svg, -W / 2, yy, -dW / 2, yy, `${Math.round(side)}`, fs * 0.7);
+      dim(svg, dW / 2, yy, W / 2, yy, `${Math.round(side)}`, fs * 0.7);
+    }
   }
   // robot
   if (isNum(s.robotDia)) {
@@ -365,6 +386,7 @@ function renderSide(svg, result) {
     if (dD > tD) el('rect', { x: tD, y: H - 12, width: dD - tD, height: 12, fill: '#5a6068', 'fill-opacity': 0.6, ...stroke('#22262a', 1) }, svg);
     el('rect', { x: 0, y: H - dH, width: tD, height: dH, fill: known ? '#3a4048' : '#9a9ea4', 'fill-opacity': known ? 0.75 : 0.35, rx: 6, ...stroke('#22262a', 1.5, known ? {} : { 'stroke-dasharray': '6 5' }) }, svg);
     text(svg, tD / 2, H - dH + fs * 1.0, known ? `dock ${s.dockH}` : 'dock ?', fs * 0.75, { fill: '#fff' });
+    if (known && H - dH > 0) dim(svg, tD * 0.7, 0, tD * 0.7, H - dH, `${Math.round(H - dH)} above dock`, fs * 0.7);
   }
   // robot
   if (isNum(s.robotDia) && isNum(s.robotH)) {
@@ -374,6 +396,36 @@ function renderSide(svg, result) {
     el('rect', { x: D - z - r, y: H - s.robotH, width: s.robotDia, height: s.robotH, rx: Math.min(14, s.robotH / 3), fill: COLORS[st], 'fill-opacity': 0.85, ...stroke('#1d2126') }, svg);
   }
   text(svg, D / 2, -t - fs * 2.2, `height ${H}`, fs);
+}
+
+// ---------- Leftover space ----------
+function renderSpaces(result) {
+  const sp = result.spaces;
+  const tiles = [
+    ['Above dock', sp.aboveDock, 'to underside of cabinet'],
+    ['Each side of dock', sp.dockSides, 'dock to side wall'],
+    ['Above robot', sp.aboveRobot, 'robot top to door bottom'],
+    ['Spare across opening', sp.opening, 'total, robot in opening'],
+    [sp.toDoor != null && sp.toDoor < 0 ? 'Pokes out under door' : 'Parked robot to door', sp.toDoor == null ? null : Math.abs(sp.toDoor), sp.toDoor != null && sp.toDoor < 0 ? 'ramp/robot past the door' : 'front of robot to door'],
+  ];
+  $('spaces').replaceChildren(...tiles.map(([label, v, sub]) => {
+    const d = document.createElement('div');
+    d.className = 'space-tile' + (v != null && v < 0 ? ' neg' : '');
+    const n = document.createElement('div');
+    n.className = 'space-num';
+    n.textContent = v == null ? '?' : `${Math.round(v * 10) / 10}`;
+    const u = document.createElement('span');
+    u.textContent = v == null ? '' : ' mm';
+    n.append(u);
+    const l = document.createElement('div');
+    l.className = 'space-label';
+    l.textContent = label;
+    const s2 = document.createElement('div');
+    s2.className = 'space-sub';
+    s2.textContent = sub;
+    d.append(n, l, s2);
+    return d;
+  }));
 }
 
 // ---------- Checks + table ----------
@@ -429,6 +481,7 @@ function update() {
   syncInputs();
   const result = evaluate(state);
   renderChecks(result);
+  renderSpaces(result);
   render3D(result);
   renderTop($('topView'), result);
   renderSide($('sideView'), result);
