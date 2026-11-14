@@ -13,10 +13,11 @@
         "width": 409,
         "depth": 440,
         "height": 470,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 300
       },
       "robotOnDock": true,
-      "notes": "Retractable LiDAR turret; 79.8 mm is the robot's quoted height. Reviewer notes the dock wants 0.5 m side clearance.",
+      "notes": "Retractable LiDAR turret; 79.8 mm is the robot's quoted height. Reviewer notes the dock wants 0.5 m side clearance. Tower depth ~300 mm without the ramp is an estimate.",
       "sources": [
         "https://cybershack.com.au/reviews/roborock-saros-10-the-thinnest-smartest-robot-vacuum-mop-cleaning-review",
         "https://www.techradar.com/home/robot-vacuums/roborock-saros-10r-vs-saros-10-robot-vacuum"
@@ -41,10 +42,11 @@
         "width": 475,
         "depth": 381,
         "height": 488,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 300
       },
       "robotOnDock": true,
-      "notes": "No LiDAR turret (StarSight navigation), so the height is fixed.",
+      "notes": "No LiDAR turret (StarSight navigation), so the height is fixed. Tower depth ~300 mm without the ramp is an estimate.",
       "sources": [
         "https://www.techradar.com/home/robot-vacuums/roborock-saros-10r-vs-saros-10-robot-vacuum"
       ],
@@ -66,10 +68,11 @@
         "width": 340,
         "depth": 488,
         "height": 521,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 300
       },
       "robotOnDock": true,
-      "notes": "Retractable LiDAR.",
+      "notes": "Retractable LiDAR. Tower depth ~300 mm without the ramp is an estimate.",
       "sources": [
         "https://smarthomecompared.com/robot-vacuums/roborock-qrevo-edge-2"
       ],
@@ -89,10 +92,11 @@
         "width": 340,
         "depth": 487,
         "height": 521,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 300
       },
       "robotOnDock": true,
-      "notes": "No turret (StarSight navigation).",
+      "notes": "No turret (StarSight navigation). Tower depth ~300 mm without the ramp is an estimate.",
       "sources": [
         "https://smarthomecompared.com/robot-vacuums/roborock-qrevo-slim",
         "https://us.roborock.com/pages/roborock-qrevo-slim"
@@ -113,10 +117,11 @@
         "width": 340,
         "depth": 487,
         "height": 521,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 300
       },
       "robotOnDock": true,
-      "notes": "Fixed LiDAR turret – a typical 'standard height' robot.",
+      "notes": "Fixed LiDAR turret – a typical 'standard height' robot. Tower depth ~300 mm without the ramp is an estimate.",
       "sources": [
         "https://global.roborock.com/pages/roborock-qrevo-s"
       ],
@@ -182,10 +187,11 @@
         "width": 340,
         "depth": 457,
         "height": 590,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 300
       },
       "robotOnDock": true,
-      "notes": "89 mm is with the VersaLift LiDAR retracted; it is taller with the LiDAR raised. Dock is 340 W x 457 D x 590 H (same dock family as the L40).",
+      "notes": "89 mm is with the VersaLift LiDAR retracted; it is taller with the LiDAR raised. Dock is 340 W x 457 D x 590 H (same dock family as the L40). Tower depth ~300 mm without the ramp is an estimate.",
       "sources": [
         "https://global.dreametech.com/products/x50-ultra",
         "https://smarthomecompared.com/robot-vacuums/dreame-x50-ultra"
@@ -547,10 +553,11 @@
         "width": 340,
         "depth": 457,
         "height": 590,
-        "type": "Self-empty + mop wash"
+        "type": "Self-empty + mop wash",
+        "towerDepth": 300
       },
       "robotOnDock": true,
-      "notes": "Tall 590 mm dock. Tower depth without the ramp isn't published.",
+      "notes": "Tall 590 mm dock. Tower depth ~300 mm without the ramp is an estimate.",
       "price": {
         "rrp": 1799,
         "seen": 897,
